@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Universita' degli Studi di Napoli Federico II
  *
@@ -20,15 +21,13 @@
 #ifndef WIFI_PROTECTION_H
 #define WIFI_PROTECTION_H
 
-#include "ctrl-headers.h"
-#include "wifi-tx-vector.h"
-
 #include "ns3/nstime.h"
-
+#include "wifi-tx-vector.h"
+#include "ctrl-headers.h"
 #include <memory>
 
-namespace ns3
-{
+
+namespace ns3 {
 
 /**
  * \ingroup wifi
@@ -39,39 +38,40 @@ namespace ns3
  */
 struct WifiProtection
 {
-    /**
-     * \enum Method
-     * \brief Available protection methods
-     */
-    enum Method
+  /**
+   * \enum Method
+   * \brief Available protection methods
+   */
+  enum Method
     {
-        NONE = 0,
-        RTS_CTS,
-        CTS_TO_SELF
+      NONE = 0,
+      RTS_CTS,
+      CTS_TO_SELF
     };
 
-    /**
-     * Constructor.
-     * \param m the protection method for this object
-     */
-    WifiProtection(Method m);
-    virtual ~WifiProtection();
+  /**
+   * Constructor.
+   * \param m the protection method for this object
+   */
+  WifiProtection (Method m);
+  virtual ~WifiProtection ();
 
-    /**
-     * Clone this object.
-     * \return a pointer to the cloned object
-     */
-    virtual std::unique_ptr<WifiProtection> Copy() const = 0;
+  /**
+   * Clone this object.
+   * \return a pointer to the cloned object
+   */
+  virtual std::unique_ptr<WifiProtection> Copy (void) const = 0;
 
-    /**
-     * \brief Print the object contents.
-     * \param os output stream in which the data should be printed.
-     */
-    virtual void Print(std::ostream& os) const = 0;
+  /**
+   * \brief Print the object contents.
+   * \param os output stream in which the data should be printed.
+   */
+  virtual void Print (std::ostream &os) const = 0;
 
-    const Method method; //!< protection method
-    Time protectionTime; //!< time required by the protection method
+  const Method method;   //!< protection method
+  Time protectionTime;   //!< time required by the protection method
 };
+
 
 /**
  * \ingroup wifi
@@ -80,11 +80,12 @@ struct WifiProtection
  */
 struct WifiNoProtection : public WifiProtection
 {
-    WifiNoProtection();
+  WifiNoProtection ();
 
-    std::unique_ptr<WifiProtection> Copy() const override;
-    void Print(std::ostream& os) const override;
+  std::unique_ptr<WifiProtection> Copy (void) const override;
+  void Print (std::ostream &os) const override;
 };
+
 
 /**
  * \ingroup wifi
@@ -93,14 +94,15 @@ struct WifiNoProtection : public WifiProtection
  */
 struct WifiRtsCtsProtection : public WifiProtection
 {
-    WifiRtsCtsProtection();
+  WifiRtsCtsProtection ();
 
-    std::unique_ptr<WifiProtection> Copy() const override;
-    void Print(std::ostream& os) const override;
+  std::unique_ptr<WifiProtection> Copy (void) const override;
+  void Print (std::ostream &os) const override;
 
-    WifiTxVector rtsTxVector; //!< RTS TXVECTOR
-    WifiTxVector ctsTxVector; //!< CTS TXVECTOR
+  WifiTxVector rtsTxVector;       //!< RTS TXVECTOR
+  WifiTxVector ctsTxVector;       //!< CTS TXVECTOR
 };
+
 
 /**
  * \ingroup wifi
@@ -109,13 +111,14 @@ struct WifiRtsCtsProtection : public WifiProtection
  */
 struct WifiCtsToSelfProtection : public WifiProtection
 {
-    WifiCtsToSelfProtection();
+  WifiCtsToSelfProtection ();
 
-    std::unique_ptr<WifiProtection> Copy() const override;
-    void Print(std::ostream& os) const override;
+  std::unique_ptr<WifiProtection> Copy (void) const override;
+  void Print (std::ostream &os) const override;
 
-    WifiTxVector ctsTxVector; //!< CTS TXVECTOR
+  WifiTxVector ctsTxVector;       //!< CTS TXVECTOR
 };
+
 
 /**
  * \brief Stream insertion operator.
@@ -124,8 +127,8 @@ struct WifiCtsToSelfProtection : public WifiProtection
  * \param protection the protection method
  * \returns a reference to the stream
  */
-std::ostream& operator<<(std::ostream& os, const WifiProtection* protection);
+std::ostream& operator<< (std::ostream& os, const WifiProtection* protection);
 
-} // namespace ns3
+} //namespace ns3
 
 #endif /* WIFI_PROTECTION_H */

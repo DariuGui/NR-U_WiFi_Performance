@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 University of Washington
  *
@@ -17,8 +18,7 @@
 
 #include "ns3/test.h"
 
-int
-main(int argc, char* argv[])
+int main (int argc, char *argv[])
 {
-    return ns3::TestRunner::Run(argc, argv);
+  return ns3::TestRunner::Run (argc, argv);
 }

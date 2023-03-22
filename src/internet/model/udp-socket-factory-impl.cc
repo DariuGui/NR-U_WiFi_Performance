@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 INRIA
  *
@@ -17,42 +18,38 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "udp-socket-factory-impl.h"
-
 #include "udp-l4-protocol.h"
-
-#include "ns3/assert.h"
 #include "ns3/socket.h"
+#include "ns3/assert.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-UdpSocketFactoryImpl::UdpSocketFactoryImpl()
-    : m_udp(nullptr)
+UdpSocketFactoryImpl::UdpSocketFactoryImpl ()
+  : m_udp (0)
 {
 }
-
-UdpSocketFactoryImpl::~UdpSocketFactoryImpl()
+UdpSocketFactoryImpl::~UdpSocketFactoryImpl ()
 {
-    NS_ASSERT(!m_udp);
+  NS_ASSERT (m_udp == 0);
 }
 
 void
-UdpSocketFactoryImpl::SetUdp(Ptr<UdpL4Protocol> udp)
+UdpSocketFactoryImpl::SetUdp (Ptr<UdpL4Protocol> udp)
 {
-    m_udp = udp;
+  m_udp = udp;
 }
 
 Ptr<Socket>
-UdpSocketFactoryImpl::CreateSocket()
+UdpSocketFactoryImpl::CreateSocket (void)
 {
-    return m_udp->CreateSocket();
+  return m_udp->CreateSocket ();
 }
 
-void
-UdpSocketFactoryImpl::DoDispose()
+void 
+UdpSocketFactoryImpl::DoDispose (void)
 {
-    m_udp = nullptr;
-    UdpSocketFactory::DoDispose();
+  m_udp = 0;
+  UdpSocketFactory::DoDispose ();
 }
 
 } // namespace ns3

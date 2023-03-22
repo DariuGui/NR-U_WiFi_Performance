@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -19,14 +20,13 @@
 
 #include "ff-mac-csched-sap.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-FfMacCschedSapProvider::~FfMacCschedSapProvider()
+FfMacCschedSapProvider::~FfMacCschedSapProvider ()
 {
 }
 
-FfMacCschedSapUser::~FfMacCschedSapUser()
+FfMacCschedSapUser::~FfMacCschedSapUser ()
 {
 }
 

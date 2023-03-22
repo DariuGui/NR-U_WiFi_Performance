@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2015 Danilo Abrignani
  *
@@ -20,15 +21,17 @@
 
 #include "lte-ccm-mac-sap.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-LteCcmMacSapProvider::~LteCcmMacSapProvider()
+
+LteCcmMacSapProvider::~LteCcmMacSapProvider ()
 {
 }
 
-LteCcmMacSapUser::~LteCcmMacSapUser()
+
+LteCcmMacSapUser::~LteCcmMacSapUser ()
 {
 }
+
 
 } // end of namespace ns3

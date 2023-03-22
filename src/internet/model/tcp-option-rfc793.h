@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Adrian Sai-wah Tam
  *
@@ -21,8 +22,7 @@
 
 #include "ns3/tcp-option.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup tcp
@@ -31,23 +31,24 @@ namespace ns3
  */
 class TcpOptionEnd : public TcpOption
 {
-  public:
-    TcpOptionEnd();
-    ~TcpOptionEnd() override;
+public:
+  TcpOptionEnd ();
+  virtual ~TcpOptionEnd ();
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    TypeId GetInstanceTypeId() const override;
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
 
-    void Print(std::ostream& os) const override;
-    void Serialize(Buffer::Iterator start) const override;
-    uint32_t Deserialize(Buffer::Iterator start) override;
+  virtual void Print (std::ostream &os) const;
+  virtual void Serialize (Buffer::Iterator start) const;
+  virtual uint32_t Deserialize (Buffer::Iterator start);
 
-    uint8_t GetKind() const override;
-    uint32_t GetSerializedSize() const override;
+  virtual uint8_t GetKind (void) const;
+  virtual uint32_t GetSerializedSize (void) const;
+
 };
 
 /**
@@ -55,23 +56,23 @@ class TcpOptionEnd : public TcpOption
  */
 class TcpOptionNOP : public TcpOption
 {
-  public:
-    TcpOptionNOP();
-    ~TcpOptionNOP() override;
+public:
+  TcpOptionNOP ();
+  virtual ~TcpOptionNOP ();
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    TypeId GetInstanceTypeId() const override;
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
 
-    void Print(std::ostream& os) const override;
-    void Serialize(Buffer::Iterator start) const override;
-    uint32_t Deserialize(Buffer::Iterator start) override;
+  virtual void Print (std::ostream &os) const;
+  virtual void Serialize (Buffer::Iterator start) const;
+  virtual uint32_t Deserialize (Buffer::Iterator start);
 
-    uint8_t GetKind() const override;
-    uint32_t GetSerializedSize() const override;
+  virtual uint8_t GetKind (void) const;
+  virtual uint32_t GetSerializedSize (void) const;
 };
 
 /**
@@ -79,37 +80,37 @@ class TcpOptionNOP : public TcpOption
  */
 class TcpOptionMSS : public TcpOption
 {
-  public:
-    TcpOptionMSS();
-    ~TcpOptionMSS() override;
+public:
+  TcpOptionMSS ();
+  virtual ~TcpOptionMSS ();
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    TypeId GetInstanceTypeId() const override;
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
 
-    void Print(std::ostream& os) const override;
-    void Serialize(Buffer::Iterator start) const override;
-    uint32_t Deserialize(Buffer::Iterator start) override;
+  virtual void Print (std::ostream &os) const;
+  virtual void Serialize (Buffer::Iterator start) const;
+  virtual uint32_t Deserialize (Buffer::Iterator start);
 
-    uint8_t GetKind() const override;
-    uint32_t GetSerializedSize() const override;
+  virtual uint8_t GetKind (void) const;
+  virtual uint32_t GetSerializedSize (void) const;
 
-    /**
-     * \brief Get the Maximum Segment Size stored in the Option
-     * \return The Maximum Segment Size
-     */
-    uint16_t GetMSS() const;
-    /**
-     * \brief Set the Maximum Segment Size stored in the Option
-     * \param mss The Maximum Segment Size
-     */
-    void SetMSS(uint16_t mss);
+  /**
+   * \brief Get the Maximum Segment Size stored in the Option
+   * \return The Maximum Segment Size
+   */
+  uint16_t GetMSS (void) const;
+  /**
+   * \brief Set the Maximum Segment Size stored in the Option
+   * \param mss The Maximum Segment Size
+   */
+  void SetMSS (uint16_t mss);
 
-  protected:
-    uint16_t m_mss; //!< maximum segment size
+protected:
+  uint16_t m_mss; //!< maximum segment size
 };
 
 } // namespace ns3

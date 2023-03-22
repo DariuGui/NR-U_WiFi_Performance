@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2018 NITK Surathkal
  *
@@ -24,8 +25,7 @@
 
 #include "ns3/tcp-recovery-ops.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup recoveryOps
@@ -41,55 +41,53 @@ namespace ns3
  */
 class TcpPrrRecovery : public TcpClassicRecovery
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    /**
-     * Create an unbound tcp socket.
-     */
-    TcpPrrRecovery();
+  /**
+   * Create an unbound tcp socket.
+   */
+  TcpPrrRecovery (void);
 
-    /**
-     * \brief Copy constructor
-     * \param sock the object to copy
-     */
-    TcpPrrRecovery(const TcpPrrRecovery& sock);
+  /**
+   * \brief Copy constructor
+   * \param sock the object to copy
+   */
+  TcpPrrRecovery (const TcpPrrRecovery& sock);
 
-    ~TcpPrrRecovery() override;
+  virtual ~TcpPrrRecovery (void) override;
 
-    /**
-     * \brief Reduction Bound variant (CRB or SSRB)
-     */
-    enum ReductionBound_t
-    {
-        CRB, /**< Conservative Reduction Bound */
-        SSRB /**< Slow Start Reduction Bound */
-    };
+  /**
+   * \brief Reduction Bound variant (CRB or SSRB)
+   */
+  typedef enum
+  {
+    CRB,                /**< Conservative Reduction Bound */
+    SSRB                /**< Slow Start Reduction Bound */
+  } ReductionBound_t;
 
-    std::string GetName() const override;
+  std::string GetName () const override;
 
-    void EnterRecovery(Ptr<TcpSocketState> tcb,
-                       uint32_t dupAckCount,
-                       uint32_t unAckDataCount,
-                       uint32_t deliveredBytes) override;
+  virtual void EnterRecovery (Ptr<TcpSocketState> tcb, uint32_t dupAckCount,
+                              uint32_t unAckDataCount, uint32_t deliveredBytes) override;
 
-    void DoRecovery(Ptr<TcpSocketState> tcb, uint32_t deliveredBytes) override;
+  virtual void DoRecovery (Ptr<TcpSocketState> tcb, uint32_t deliveredBytes) override;
 
-    void ExitRecovery(Ptr<TcpSocketState> tcb) override;
+  virtual void ExitRecovery (Ptr<TcpSocketState> tcb) override;
 
-    void UpdateBytesSent(uint32_t bytesSent) override;
+  virtual void UpdateBytesSent (uint32_t bytesSent) override;
 
-    Ptr<TcpRecoveryOps> Fork() override;
+  virtual Ptr<TcpRecoveryOps> Fork () override;
 
-  private:
-    uint32_t m_prrDelivered{0};       //!< total bytes delivered during recovery phase
-    uint32_t m_prrOut{0};             //!< total bytes sent during recovery phase
-    uint32_t m_recoveryFlightSize{0}; //!< value of bytesInFlight at the start of recovery phase
-    ReductionBound_t m_reductionBoundMode{SSRB}; //!< mode of Reduction Bound to be used
+private:
+  uint32_t m_prrDelivered                   {0};    //!< total bytes delivered during recovery phase
+  uint32_t m_prrOut                         {0};    //!< total bytes sent during recovery phase
+  uint32_t m_recoveryFlightSize             {0};    //!< value of bytesInFlight at the start of recovery phase
+  ReductionBound_t m_reductionBoundMode     {SSRB}; //!< mode of Reduction Bound to be used
 };
 } // namespace ns3
 

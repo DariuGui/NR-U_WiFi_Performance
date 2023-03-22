@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Orange Labs
  *
@@ -22,9 +23,9 @@
 #ifndef OFDM_PPDU_H
 #define OFDM_PPDU_H
 
-#include "ns3/header.h"
 #include "ns3/wifi-phy-band.h"
 #include "ns3/wifi-ppdu.h"
+#include "ns3/header.h"
 
 /**
  * \file
@@ -32,8 +33,7 @@
  * Declaration of ns3::OfdmPpdu class.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 class WifiPsdu;
 
@@ -46,95 +46,91 @@ class WifiPsdu;
  */
 class OfdmPpdu : public WifiPpdu
 {
+public:
+
+  /**
+   * OFDM and ERP OFDM L-SIG PHY header.
+   * See section 17.3.4 in IEEE 802.11-2016.
+   */
+  class LSigHeader : public Header
+  {
   public:
+    LSigHeader ();
+    virtual ~LSigHeader ();
+
     /**
-     * OFDM and ERP OFDM L-SIG PHY header.
-     * See section 17.3.4 in IEEE 802.11-2016.
+     * \brief Get the type ID.
+     * \return the object TypeId
      */
-    class LSigHeader : public Header
-    {
-      public:
-        LSigHeader();
-        ~LSigHeader() override;
+    static TypeId GetTypeId (void);
 
-        /**
-         * \brief Get the type ID.
-         * \return the object TypeId
-         */
-        static TypeId GetTypeId();
-
-        TypeId GetInstanceTypeId() const override;
-        void Print(std::ostream& os) const override;
-        uint32_t GetSerializedSize() const override;
-        void Serialize(Buffer::Iterator start) const override;
-        uint32_t Deserialize(Buffer::Iterator start) override;
-
-        /**
-         * Fill the RATE field of L-SIG (in bit/s).
-         *
-         * \param rate the RATE field of L-SIG expressed in bit/s
-         * \param channelWidth the channel width (in MHz)
-         */
-        void SetRate(uint64_t rate, uint16_t channelWidth = 20);
-        /**
-         * Return the RATE field of L-SIG (in bit/s).
-         *
-         * \param channelWidth the channel width (in MHz)
-         * \return the RATE field of L-SIG expressed in bit/s
-         */
-        uint64_t GetRate(uint16_t channelWidth = 20) const;
-        /**
-         * Fill the LENGTH field of L-SIG (in bytes).
-         *
-         * \param length the LENGTH field of L-SIG expressed in bytes
-         */
-        void SetLength(uint16_t length);
-        /**
-         * Return the LENGTH field of L-SIG (in bytes).
-         *
-         * \return the LENGTH field of L-SIG expressed in bytes
-         */
-        uint16_t GetLength() const;
-
-      private:
-        uint8_t m_rate;    ///< RATE field
-        uint16_t m_length; ///< LENGTH field
-    };                     // class LSigHeader
+    TypeId GetInstanceTypeId (void) const override;
+    void Print (std::ostream &os) const override;
+    uint32_t GetSerializedSize (void) const override;
+    void Serialize (Buffer::Iterator start) const override;
+    uint32_t Deserialize (Buffer::Iterator start) override;
 
     /**
-     * Create an OFDM PPDU.
+     * Fill the RATE field of L-SIG (in bit/s).
      *
-     * \param psdu the PHY payload (PSDU)
-     * \param txVector the TXVECTOR that was used for this PPDU
-     * \param txCenterFreq the center frequency (MHz) that was used for this PPDU
-     * \param band the WifiPhyBand used for the transmission of this PPDU
-     * \param uid the unique ID of this PPDU
-     * \param instantiateLSig flag used to instantiate LSigHeader (set LSigHeader's
-     *                        rate and length), should be disabled by child classes
+     * \param rate the RATE field of L-SIG expressed in bit/s
+     * \param channelWidth the channel width (in MHz)
      */
-    OfdmPpdu(Ptr<const WifiPsdu> psdu,
-             const WifiTxVector& txVector,
-             uint16_t txCenterFreq,
-             WifiPhyBand band,
-             uint64_t uid,
-             bool instantiateLSig = true);
+    void SetRate (uint64_t rate, uint16_t channelWidth = 20);
     /**
-     * Destructor for OfdmPpdu.
+     * Return the RATE field of L-SIG (in bit/s).
+     *
+     * \param channelWidth the channel width (in MHz)
+     * \return the RATE field of L-SIG expressed in bit/s
      */
-    ~OfdmPpdu() override;
-
-    Time GetTxDuration() const override;
-    Ptr<WifiPpdu> Copy() const override;
-
-  protected:
-    WifiPhyBand m_band;      //!< the WifiPhyBand used to transmit that PPDU
-    uint16_t m_channelWidth; //!< the channel width used to transmit that PPDU in MHz
-    LSigHeader m_lSig;       //!< the L-SIG PHY header
+    uint64_t GetRate (uint16_t channelWidth = 20) const;
+    /**
+     * Fill the LENGTH field of L-SIG (in bytes).
+     *
+     * \param length the LENGTH field of L-SIG expressed in bytes
+     */
+    void SetLength (uint16_t length);
+    /**
+     * Return the LENGTH field of L-SIG (in bytes).
+     *
+     * \return the LENGTH field of L-SIG expressed in bytes
+     */
+    uint16_t GetLength (void) const;
 
   private:
-    WifiTxVector DoGetTxVector() const override;
-}; // class OfdmPpdu
+    uint8_t m_rate;    ///< RATE field
+    uint16_t m_length; ///< LENGTH field
+  }; //class LSigHeader
 
-} // namespace ns3
+  /**
+   * Create an OFDM PPDU.
+   *
+   * \param psdu the PHY payload (PSDU)
+   * \param txVector the TXVECTOR that was used for this PPDU
+   * \param band the WifiPhyBand used for the transmission of this PPDU
+   * \param uid the unique ID of this PPDU
+   * \param instantiateLSig flag used to instantiate LSigHeader (set LSigHeader's
+   *                        rate and length), should be disabled by child classes
+   */
+  OfdmPpdu (Ptr<const WifiPsdu> psdu, const WifiTxVector& txVector, WifiPhyBand band, uint64_t uid,
+            bool instantiateLSig = true);
+  /**
+   * Destructor for OfdmPpdu.
+   */
+  virtual ~OfdmPpdu ();
+
+  Time GetTxDuration (void) const override;
+  Ptr<WifiPpdu> Copy (void) const override;
+
+protected:
+  WifiPhyBand m_band;       //!< the WifiPhyBand used to transmit that PPDU
+  uint16_t m_channelWidth;  //!< the channel width used to transmit that PPDU in MHz
+  LSigHeader m_lSig;        //!< the L-SIG PHY header
+
+private:
+  WifiTxVector DoGetTxVector (void) const override;
+}; //class OfdmPpdu
+
+} //namespace ns3
 
 #endif /* OFDM_PPDU_H */

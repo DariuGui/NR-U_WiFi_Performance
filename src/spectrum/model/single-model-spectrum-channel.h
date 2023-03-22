@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 CTTC
  *
@@ -20,12 +21,14 @@
 #ifndef SINGLE_MODEL_SPECTRUM_CHANNEL_H
 #define SINGLE_MODEL_SPECTRUM_CHANNEL_H
 
+
 #include <ns3/spectrum-channel.h>
 #include <ns3/spectrum-model.h>
 #include <ns3/traced-callback.h>
 
-namespace ns3
-{
+namespace ns3 {
+
+
 
 /**
  * \ingroup spectrum
@@ -36,49 +39,51 @@ namespace ns3
  */
 class SingleModelSpectrumChannel : public SpectrumChannel
 {
-  public:
-    SingleModelSpectrumChannel();
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  SingleModelSpectrumChannel ();
 
-    // inherited from SpectrumChannel
-    void RemoveRx(Ptr<SpectrumPhy> phy) override;
-    void AddRx(Ptr<SpectrumPhy> phy) override;
-    void StartTx(Ptr<SpectrumSignalParameters> params) override;
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    // inherited from Channel
-    std::size_t GetNDevices() const override;
-    Ptr<NetDevice> GetDevice(std::size_t i) const override;
+  // inherited from SpectrumChannel
+  virtual void AddRx (Ptr<SpectrumPhy> phy);
+  virtual void StartTx (Ptr<SpectrumSignalParameters> params);
 
-    /// Container: SpectrumPhy objects
-    typedef std::vector<Ptr<SpectrumPhy>> PhyList;
 
-  private:
-    void DoDispose() override;
+  // inherited from Channel
+  virtual std::size_t GetNDevices (void) const;
+  virtual Ptr<NetDevice> GetDevice (std::size_t i) const;
 
-    /**
-     * Used internally to reschedule transmission after the propagation delay.
-     *
-     * \param params
-     * \param receiver
-     */
-    void StartRx(Ptr<SpectrumSignalParameters> params, Ptr<SpectrumPhy> receiver);
+  /// Container: SpectrumPhy objects
+  typedef std::vector<Ptr<SpectrumPhy> > PhyList;
 
-    /**
-     * List of SpectrumPhy instances attached to the channel.
-     */
-    PhyList m_phyList;
+private:
+  virtual void DoDispose ();
 
-    /**
-     * SpectrumModel that this channel instance is supporting.
-     */
-    Ptr<const SpectrumModel> m_spectrumModel;
+  /**
+   * Used internally to reschedule transmission after the propagation delay.
+   *
+   * \param params
+   * \param receiver
+   */
+  void StartRx (Ptr<SpectrumSignalParameters> params, Ptr<SpectrumPhy> receiver);
+
+  /**
+   * List of SpectrumPhy instances attached to the channel.
+   */
+  PhyList m_phyList;
+
+  /**
+   * SpectrumModel that this channel instance is supporting.
+   */
+  Ptr<const SpectrumModel> m_spectrumModel;
+
 };
 
-} // namespace ns3
+}
 
 #endif /* SINGLE_MODEL_SPECTRUM_CHANNEL_H */

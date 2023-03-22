@@ -1,7 +1,9 @@
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from ns import ns
+import ns.core
+import ns.network
+import ns.visualizer
 
 from visualizer.base import InformationWindow
 from kiwi.ui.objectlist import ObjectList, Column
@@ -93,7 +95,7 @@ class ShowLastPackets(InformationWindow):
 
 
     def __init__(self, visualizer, node_index):
-        """!
+        """
         Initializer
         @param self this object
         @param visualizer the visualizer object
@@ -101,8 +103,8 @@ class ShowLastPackets(InformationWindow):
         """
         InformationWindow.__init__(self)
         self.win = Gtk.Dialog(parent=visualizer.window,
-                              flags=Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                              buttons=("_Close", Gtk.ResponseType.CLOSE))
+                              flags=Gtk.DialogFlags.DESTROY_WITH_PARENT|Gtk.DialogFlags.NO_SEPARATOR,
+                              buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE))
         self.win.connect("response", self._response_cb)
         self.win.set_title("Last packets for node %i" % node_index)
         self.visualizer = visualizer

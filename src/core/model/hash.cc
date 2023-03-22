@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 Lawrence Livermore National Laboratory
  *
@@ -17,9 +18,8 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include "hash.h"
-
 #include "log.h"
+#include "hash.h"
 
 /**
  * \file
@@ -27,36 +27,28 @@
  * \brief ns3::Hasher implementation.
  */
 
-namespace ns3
-{
 
-NS_LOG_COMPONENT_DEFINE("Hash");
+namespace ns3 {
 
-Hasher&
-GetStaticHash()
+NS_LOG_COMPONENT_DEFINE ("Hash");
+
+Hasher::Hasher ()
 {
-    static Hasher g_hasher = Hasher();
-    g_hasher.clear();
-    return g_hasher;
+  m_impl = Create <Hash::Function::Murmur3> ();
+  NS_ASSERT (m_impl != 0);
 }
 
-Hasher::Hasher()
+Hasher::Hasher (Ptr<Hash::Implementation> hp)
+  : m_impl (hp)
 {
-    m_impl = Create<Hash::Function::Murmur3>();
-    NS_ASSERT(m_impl);
+  NS_ASSERT (m_impl != 0);
 }
 
-Hasher::Hasher(Ptr<Hash::Implementation> hp)
-    : m_impl(hp)
+Hasher &
+Hasher::clear (void)
 {
-    NS_ASSERT(m_impl);
+  m_impl->clear ();
+  return *this;
 }
 
-Hasher&
-Hasher::clear()
-{
-    m_impl->clear();
-    return *this;
-}
-
-} // namespace ns3
+}  // namespace ns3

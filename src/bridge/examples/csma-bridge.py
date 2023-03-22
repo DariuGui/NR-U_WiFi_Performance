@@ -15,17 +15,17 @@
 
 # Network topology
 #
-#        n0     n1
-#        |      |
+#        n0     n1  
+#        |      | 
 #       ----------
 #       | Switch |
 #       ----------
-#        |      |
-#        n2     n3
+#        |      | 
+#        n2     n3  
 #
 #
 # - CBR/UDP flows from n0 to n1 and from n3 to n0
-# - DropTail queues
+# - DropTail queues 
 # - Tracing of queues and packet receptions to file "csma-bridge.tr"
 
 ## \file
@@ -33,7 +33,12 @@
 #  Bridge example connecting two broadcast domains.
 
 
-from ns import ns
+import ns.applications
+import ns.bridge
+import ns.core
+import ns.csma
+import ns.internet
+import ns.network
 
 
 def main(argv):
@@ -95,8 +100,8 @@ def main(argv):
     #print "Create Applications."
     port = 9   # Discard port(RFC 863)
 
-    inet_sock_address = ns.network.InetSocketAddress(ns.network.Ipv4Address("10.1.1.2"), port)
-    onoff = ns.applications.OnOffHelper("ns3::UdpSocketFactory", inet_sock_address.ConvertTo())
+    onoff = ns.applications.OnOffHelper("ns3::UdpSocketFactory", 
+                            ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.1.1.2"), port)))
     onoff.SetConstantRate (ns.network.DataRate ("500kb/s"))
 
     app = onoff.Install(ns.network.NodeContainer(terminals.Get(0)))
@@ -105,17 +110,16 @@ def main(argv):
     app.Stop(ns.core.Seconds(10.0))
 
     # Create an optional packet sink to receive these packets
-    inet_address = ns.network.InetSocketAddress(ns.network.Ipv4Address.GetAny(), port)
-    sink = ns.applications.PacketSinkHelper("ns3::UdpSocketFactory", inet_address.ConvertTo())
+    sink = ns.applications.PacketSinkHelper("ns3::UdpSocketFactory",
+                                ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address.GetAny(), port)))
     app = sink.Install(ns.network.NodeContainer(terminals.Get(1)))
     app.Start(ns.core.Seconds(0.0))
 
-    #
+    # 
     # Create a similar flow from n3 to n0, starting at time 1.1 seconds
     #
-    inet_address = ns.network.InetSocketAddress(ns.network.Ipv4Address("10.1.1.1"), port)
-    onoff.SetAttribute("Remote",
-                       ns.network.AddressValue(inet_address.ConvertTo()))
+    onoff.SetAttribute("Remote", 
+                       ns.network.AddressValue(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.1.1.1"), port)))
     app = onoff.Install(ns.network.NodeContainer(terminals.Get(3)))
     app.Start(ns.core.Seconds(1.1))
     app.Stop(ns.core.Seconds(10.0))

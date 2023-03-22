@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2008 INRIA
  *
@@ -19,8 +20,8 @@
 #ifndef SYSTEM_PATH_H
 #define SYSTEM_PATH_H
 
-#include <list>
 #include <string>
+#include <list>
 
 /**
  * \file
@@ -28,8 +29,7 @@
  * ns3::SystemPath declarations.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup system
@@ -45,19 +45,15 @@ namespace ns3
  * \ingroup systempath
  * \brief Namespace for various file and directory path functions.
  */
-namespace SystemPath
-{
+namespace SystemPath {
 
 /**
  * \ingroup systempath
  * Get the file system path to the current executable.
  *
- * This path is only equivalent to the current working directory when
- * the executable is executed in its parent directory.
- *
  * \return The directory in which the currently-executing binary is located
  */
-std::string FindSelfDirectory();
+std::string FindSelfDirectory (void);
 
 /**
  * \ingroup systempath
@@ -67,7 +63,7 @@ std::string FindSelfDirectory();
  * \param [in] right A path element
  * \return A concatenation of the two input paths
  */
-std::string Append(std::string left, std::string right);
+std::string Append (std::string left, std::string right);
 
 /**
  * \ingroup systempath
@@ -81,7 +77,7 @@ std::string Append(std::string left, std::string right);
  *         the Join function.
  * \sa ns3::SystemPath::Join
  */
-std::list<std::string> Split(std::string path);
+std::list<std::string> Split (std::string path);
 
 /**
  * Join a list of file system path directories into a single
@@ -94,8 +90,8 @@ std::list<std::string> Split(std::string path);
  * \param [in] end Iterator to one past the last element to join
  * \return A path that is a concatenation of all the input elements.
  */
-std::string Join(std::list<std::string>::const_iterator begin,
-                 std::list<std::string>::const_iterator end);
+std::string Join (std::list<std::string>::const_iterator begin,
+                  std::list<std::string>::const_iterator end);
 
 /**
  * \ingroup systempath
@@ -104,7 +100,7 @@ std::string Join(std::list<std::string>::const_iterator begin,
  * \param [in] path A path which identifies a directory
  * \return A list of the filenames which are located in the input directory
  */
-std::list<std::string> ReadFiles(std::string path);
+std::list<std::string> ReadFiles (std::string path);
 
 /**
  * \ingroup systempath
@@ -120,19 +116,19 @@ std::list<std::string> ReadFiles(std::string path);
  *
  * The first part, "/tmp/" is the absolute path found by inspecting
  * the environment variables `TMP`and `TEMP`, in order. If neither
- * exists the hard-coded root path `/tmp/` is used.
+ * exists the hard-codes root path `/tmp/` is used.
  *
  * The directory name itself starts with the "ns3" identifier telling folks
  * who is making all of the temp directories.
  *
- * The next three numbers give the hour, minute and second, separated by
+ * The next three number give the hour, minute and second, separated by
  * periods.
  *
  * The final number is randomly generated, to avoid name collisions.
  *
  * \return A path which identifies a temporary directory.
  */
-std::string MakeTemporaryDirectoryName();
+std::string MakeTemporaryDirectoryName (void);
 
 /**
  * \ingroup systempath
@@ -140,7 +136,7 @@ std::string MakeTemporaryDirectoryName();
  *
  * \param [in] path A path to a directory
  */
-void MakeDirectories(std::string path);
+void MakeDirectories (std::string path);
 
 /**
  * \ingroup systempath
@@ -149,20 +145,12 @@ void MakeDirectories(std::string path);
  * \param [in] path The path to check.
  * \returns \c true if the \pname{path} exists.
  */
-bool Exists(const std::string path);
-
-/**
- * \ingroup systempath
- * Replace incompatible characters in a path,
- * to get a path compatible with different
- * file systems.
- * \param [in] path The path to check.
- * \returns A compatible path.
- */
-std::string CreateValidSystemPath(const std::string path);
+bool Exists (const std::string path);
 
 } // namespace SystemPath
 
+
 } // namespace ns3
+
 
 #endif /* SYSTEM_PATH_H */

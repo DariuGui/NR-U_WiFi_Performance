@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Lawrence Livermore National Laboratory
  *
@@ -31,8 +32,8 @@
  * Declaration of classes ns3::ExampleAsTestSuite and ns3::ExampleAsTestCase.
  */
 
-namespace ns3
-{
+namespace ns3 {
+
 
 /**
  * \ingroup testing
@@ -47,60 +48,60 @@ namespace ns3
  */
 class ExampleAsTestCase : public TestCase
 {
-  public:
-    /**
-     * Constructor.
-     * \param [in] name The test case name, typically the program name
-     *                  and summary of the arguments, such as `my-example-foo`
-     * \param [in] program The actual example program names, such as `my-example`
-     * \param [in] dataDir The location of the reference file.
-     *                  This is normally provided by the symbol
-     *                  `NS_TEST_SOURCEDIR` in the `module-examples-test-suite.cc`
-     *                  file.
-     *                  The reference file should be named after
-     *                  the test case name,
-     *                  for example `my-example-foo.log`.  If you use
-     *                  the `--update` argument to `test.py` or
-     *                  `test-runner` the reference file will be created
-     *                  with the correct name.
-     * \param [in] args Any additional arguments to the program.
-     */
-    ExampleAsTestCase(const std::string name,
-                      const std::string program,
-                      const std::string dataDir,
-                      const std::string args = "");
+public:
+  /**
+   * Constructor.
+   * \param [in] name The test case name, typically the program name
+   *                  and summary of the arguments, such as `my-example-foo`
+   * \param [in] program The actual example program names, such as `my-example`
+   * \param [in] dataDir The location of the reference file.
+   *                  This is normally provided by the symbol
+   *                  `NS_TEST_SOURCEDIR` in the `module-examples-test-suite.cc`
+   *                  file.
+   *                  The reference file should be named after
+   *                  the test case name,
+   *                  for example `my-example-foo.log`.  If you use
+   *                  the `--update` argument to `test.py` or
+   *                  `test-runner` the reference file will be created
+   *                  with the correct name.
+   * \param [in] args Any additional arguments to the program.
+   */
+  ExampleAsTestCase (const std::string name,
+                     const std::string program,
+                     const std::string dataDir,
+                     const std::string args = "");
 
-    /** Destructor. */
-    ~ExampleAsTestCase() override;
+  /** Destructor. */
+  virtual ~ExampleAsTestCase (void);
 
-    /**
-     * Customization point for more complicated patterns
-     * to invoke the example program.
-     *
-     * \returns The string to be given to the `ns3 --command-template=` argument.
-     */
-    virtual std::string GetCommandTemplate() const;
+  /**
+   * Customization point for more complicated patterns
+   * to invoke the example program.
+   *
+   * \returns The string to be given to the `waf --command-template=` argument.
+   */
+  virtual std::string GetCommandTemplate (void) const;
 
-    /**
-     * Customization point for tests requiring post-processing of stdout.
-     *
-     * For example to sort return "| sort"
-     *
-     * Default is "", no processing step.
-     *
-     * \returns The string of post-processing commands
-     */
-    virtual std::string GetPostProcessingCommand() const;
+  /**
+   * Customization point for tests requiring post-processing of stdout.
+   *
+   * For example to sort return "| sort"
+   *
+   * Default is "", no processing step.
+   *
+   * \returns The string of post-processing commands
+   */
+  virtual std::string GetPostProcessingCommand (void) const;
 
-    // Inherited
-    void DoRun() override;
+  // Inherited
+  virtual void DoRun (void);
 
-  protected:
-    std::string m_program; /**< The program to run. */
-    std::string m_dataDir; /**< The source directory for the test. */
-    std::string m_args;    /**< Any additional arguments to the program. */
+protected:
+  std::string m_program;  /**< The program to run. */
+  std::string m_dataDir;  /**< The source directory for the test. */
+  std::string m_args;     /**< Any additional arguments to the program. */
 
-}; // class ExampleAsTestCase
+};  // class ExampleAsTestCase
 
 /**
  * \ingroup testing
@@ -113,7 +114,7 @@ class ExampleAsTestCase : public TestCase
  * methods is what criteria is used to for success.  Examples added to
  * `examples-to-run.py` will be run and the exit status checked
  * (non-zero indicates failure).  ExampleAsTestSuite adds checking of
- * output against a specified known "good" reference file.
+ * output against a specified known "good" reference file.  
  *
  * \warning If you are thinking about using this class, strongly
  * consider using a standard test instead.  The TestSuite class has
@@ -125,7 +126,7 @@ class ExampleAsTestCase : public TestCase
  * \par Test Addition
  *
  * To use an example program as a test you need to create a test suite
- * file and add it to the appropriate list in your module CMakeLists.txt
+ * file and add it to the appropriate list in your module wscript
  * file. The "good" output reference file needs to be generated for
  * detecting regressions.
  *
@@ -133,12 +134,12 @@ class ExampleAsTestCase : public TestCase
  * program is `mymodule/examples/mod-example.cc`.  First you should
  * create a test file `mymodule/test/mymodule-examples-test-suite.cc`
  * which looks like this:
- *
+ * 
  * \code{.cpp}
  * #include "ns3/example-as-test.h"
- * static ns3::ExampleAsTestSuite g_modExampleOne ("mymodule-example-mod-example-one",
- * "mod-example", NS_TEST_SOURCEDIR, "--arg-one"); static ns3::ExampleAsTestSuite g_modExampleTwo
- * ("mymodule-example-mod-example-two", "mod-example", NS_TEST_SOURCEDIR, "--arg-two"); \endcode
+ * static ns3::ExampleAsTestSuite g_modExampleOne ("mymodule-example-mod-example-one", "mod-example", NS_TEST_SOURCEDIR, "--arg-one");
+ * static ns3::ExampleAsTestSuite g_modExampleTwo ("mymodule-example-mod-example-two", "mod-example", NS_TEST_SOURCEDIR, "--arg-two");
+ * \endcode
  *
  * The arguments to the constructor is the name of the test suite, the
  * example to run, the directory that contains the "good" reference file
@@ -147,7 +148,7 @@ class ExampleAsTestCase : public TestCase
  * the same example is run twice with different arguments.
  *
  * You then need to add that newly created test suite file to the list
- * of test sources in `mymodule/CMakeLists.txt`.   Building of examples
+ * of test sources in `mymodule/wscript`.   Building of examples
  * is an option so you need to guard the inclusion of the test suite:
  *
  * \code{.py}
@@ -155,7 +156,7 @@ class ExampleAsTestCase : public TestCase
  *    module.source.append('model/mymodule-examples-test-suite.cc')
  * \endcode
  *
- * Since you modified a CMakeLists.txt file you need to reconfigure and
+ * Since you modified a wscript file you need to reconfigure and
  * rebuild everything.
  *
  * You just added new tests so you will need to generate the "good"
@@ -179,7 +180,7 @@ class ExampleAsTestCase : public TestCase
  *
  * This will run all `mymodule-example-...` tests and report whether they
  * produce output matching the reference files.
- *
+ * 
  * \par Writing good examples for testing
  *
  * When setting up an example for use by this class you should be very
@@ -190,23 +191,24 @@ class ExampleAsTestCase : public TestCase
  * verify and hard to keep up-to-date.  Output as little as needed for
  * the example and include only behavioral state that is important for
  * determining if the example has run correctly.
- *
+ * 
  */
 class ExampleAsTestSuite : public TestSuite
 {
-  public:
-    /**
-     * \copydoc ExampleAsTestCase::ExampleAsTestCase
-     * \param [in] duration Amount of time this test takes to execute
-     *             (defaults to QUICK).
-     */
-    ExampleAsTestSuite(const std::string name,
-                       const std::string program,
-                       const std::string dataDir,
-                       const std::string args = "",
-                       const TestDuration duration = QUICK);
-}; // class ExampleAsTestSuite
+public:
+  /**
+   * \copydoc ExampleAsTestCase::ExampleAsTestCase
+   * \param [in] duration Amount of time this test takes to execute
+   *             (defaults to QUICK).
+   */
+  ExampleAsTestSuite (const std::string name,
+                      const std::string program,
+                      const std::string dataDir,
+                      const std::string args = "",
+                      const TestDuration duration = QUICK);
+};  // class ExampleAsTestSuite
+
 
 } // namespace ns3
 
-#endif /* NS3_EXAMPLE_TEST_SUITE_H */
+#endif  /* NS3_EXAMPLE_TEST_SUITE_H */

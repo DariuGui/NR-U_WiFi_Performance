@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2018  Sébastien Deronne
  *
@@ -17,95 +18,74 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
+#include "ns3/log.h"
+#include "ns3/boolean.h"
+#include "ns3/uinteger.h"
 #include "ht-configuration.h"
 
-#include "ns3/boolean.h"
-#include "ns3/log.h"
-#include "ns3/uinteger.h"
+namespace ns3 {
 
-namespace ns3
+NS_LOG_COMPONENT_DEFINE ("HtConfiguration");
+
+NS_OBJECT_ENSURE_REGISTERED (HtConfiguration);
+
+HtConfiguration::HtConfiguration ()
 {
-
-NS_LOG_COMPONENT_DEFINE("HtConfiguration");
-
-NS_OBJECT_ENSURE_REGISTERED(HtConfiguration);
-
-HtConfiguration::HtConfiguration()
-{
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
-HtConfiguration::~HtConfiguration()
+HtConfiguration::~HtConfiguration ()
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
 TypeId
-HtConfiguration::GetTypeId()
+HtConfiguration::GetTypeId (void)
 {
-    static ns3::TypeId tid =
-        ns3::TypeId("ns3::HtConfiguration")
-            .SetParent<Object>()
-            .SetGroupName("Wifi")
-            .AddConstructor<HtConfiguration>()
-            .AddAttribute("ShortGuardIntervalSupported",
-                          "Whether or not short guard interval is supported.",
-                          BooleanValue(false),
-                          MakeBooleanAccessor(&HtConfiguration::GetShortGuardIntervalSupported,
-                                              &HtConfiguration::SetShortGuardIntervalSupported),
-                          MakeBooleanChecker())
-            .AddAttribute("LdpcSupported",
-                          "Whether or not LDPC coding is supported.",
-                          BooleanValue(false),
-                          MakeBooleanAccessor(&HtConfiguration::GetLdpcSupported,
-                                              &HtConfiguration::SetLdpcSupported),
-                          MakeBooleanChecker())
-            .AddAttribute("Support40MHzOperation",
-                          "Whether or not 40 MHz operation is to be supported.",
-                          BooleanValue(true),
-                          MakeBooleanAccessor(&HtConfiguration::Get40MHzOperationSupported,
-                                              &HtConfiguration::Set40MHzOperationSupported),
-                          MakeBooleanChecker());
+  static ns3::TypeId tid = ns3::TypeId ("ns3::HtConfiguration")
+    .SetParent<Object> ()
+    .SetGroupName ("Wifi")
+    .AddConstructor<HtConfiguration> ()
+    .AddAttribute ("ShortGuardIntervalSupported",
+                   "Whether or not short guard interval is supported.",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&HtConfiguration::GetShortGuardIntervalSupported,
+                                        &HtConfiguration::SetShortGuardIntervalSupported),
+                   MakeBooleanChecker ())
+    .AddAttribute ("LdpcSupported",
+                   "Whether or not LDPC coding is supported.",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&HtConfiguration::GetLdpcSupported,
+                                        &HtConfiguration::SetLdpcSupported),
+                   MakeBooleanChecker ())
+    ;
     return tid;
 }
 
 void
-HtConfiguration::SetShortGuardIntervalSupported(bool enable)
+HtConfiguration::SetShortGuardIntervalSupported (bool enable)
 {
-    NS_LOG_FUNCTION(this << enable);
-    m_sgiSupported = enable;
+  NS_LOG_FUNCTION (this << enable);
+  m_sgiSupported = enable;
 }
 
 bool
-HtConfiguration::GetShortGuardIntervalSupported() const
+HtConfiguration::GetShortGuardIntervalSupported (void) const
 {
-    return m_sgiSupported;
+  return m_sgiSupported;
 }
 
 void
-HtConfiguration::SetLdpcSupported(bool enable)
+HtConfiguration::SetLdpcSupported (bool enable)
 {
-    NS_LOG_FUNCTION(this << enable);
-    m_ldpcSupported = enable;
+  NS_LOG_FUNCTION (this << enable);
+  m_ldpcSupported = enable;
 }
 
 bool
-HtConfiguration::GetLdpcSupported() const
+HtConfiguration::GetLdpcSupported (void) const
 {
-    return m_ldpcSupported;
+  return m_ldpcSupported;
 }
 
-void
-HtConfiguration::Set40MHzOperationSupported(bool enable)
-{
-    NS_LOG_FUNCTION(this << enable);
-    m_40MHzSupported = enable;
-}
-
-bool
-HtConfiguration::Get40MHzOperationSupported() const
-{
-    return m_40MHzSupported;
-}
-
-} // namespace ns3
+} //namespace ns3

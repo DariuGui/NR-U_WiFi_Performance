@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 CTTC
  *
@@ -20,10 +21,10 @@
 #ifndef HALF_DUPLEX_IDEAL_PHY_SPECTRUM_PARAMETERS_H
 #define HALF_DUPLEX_IDEAL_PHY_SPECTRUM_PARAMETERS_H
 
+
 #include <ns3/spectrum-signal-parameters.h>
 
-namespace ns3
-{
+namespace ns3 {
 
 class Packet;
 
@@ -34,25 +35,27 @@ class Packet;
  */
 struct HalfDuplexIdealPhySignalParameters : public SpectrumSignalParameters
 {
-    Ptr<SpectrumSignalParameters> Copy() const override;
 
-    /**
-     * default constructor
-     */
-    HalfDuplexIdealPhySignalParameters();
+  // inherited from SpectrumSignalParameters
+  virtual Ptr<SpectrumSignalParameters> Copy ();
 
-    /**
-     * copy constructor
-     * \param p object to copy
-     */
-    HalfDuplexIdealPhySignalParameters(const HalfDuplexIdealPhySignalParameters& p);
+  /**
+   * default constructor
+   */
+  HalfDuplexIdealPhySignalParameters ();
 
-    /**
-     * The data packet being transmitted with this signal
-     */
-    Ptr<Packet> data;
+  /**
+   * copy constructor
+   */
+  HalfDuplexIdealPhySignalParameters (const HalfDuplexIdealPhySignalParameters& p);
+
+  /**
+   * The data packet being transmitted with this signal
+   */
+  Ptr<Packet> data;
 };
 
-} // namespace ns3
+}  // namespace ns3
+
 
 #endif /* HALF_DUPLEX_IDEAL_PHY_SPECTRUM_PARAMETERS_H */

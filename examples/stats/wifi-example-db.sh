@@ -39,14 +39,12 @@ then
   fi
 fi
 
-../../ns3 build wifi-example-sim
-
 for trial in $TRIALS
 do
   for distance in $DISTANCES
   do
     echo Trial $trial, distance $distance
-    ../../ns3 run wifi-example-sim --no-build -- --format=db --distance=$distance --run=run-$distance-$trial
+    ../../waf --run "wifi-example-sim --format=db --distance=$distance --run=run-$distance-$trial"
   done
 done
 
@@ -56,7 +54,7 @@ done
 #CMD="select Experiments.input,avg(Singletons.value) \
 #    from Singletons,Experiments \
 #    where Singletons.run = Experiments.run AND \
-#          Singletons.variable='wifi-rx-frames' \
+#          Singletons.name='wifi-rx-frames' \
 #    group by Experiments.input \
 #    order by abs(Experiments.input) ASC;"
 

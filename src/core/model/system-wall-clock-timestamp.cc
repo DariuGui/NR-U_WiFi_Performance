@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Lawrence Livermore National Laboratory
  *
@@ -25,42 +26,44 @@
  * ns3::SystemWallClockTimestamp implementation.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
-SystemWallClockTimestamp::SystemWallClockTimestamp()
-    : m_last(0),
-      m_diff(0)
+SystemWallClockTimestamp::SystemWallClockTimestamp (void)
+  : m_last (0),
+    m_diff (0)
 {
-    Stamp();
+  Stamp ();
 }
 
-void
-SystemWallClockTimestamp::Stamp()
+void  
+SystemWallClockTimestamp::Stamp (void)
 {
-    std::time_t seconds = std::time(nullptr);
-    m_diff = seconds - m_last;
-    m_last = seconds;
+  std::time_t seconds  = std::time (NULL);
+  m_diff = seconds - m_last;
+  m_last = seconds;
 }
-
+  
 std::string
-SystemWallClockTimestamp::ToString() const
+SystemWallClockTimestamp::ToString (void) const
 {
-    std::string now = std::ctime(&m_last);
-    now.resize(now.length() - 1); // trim trailing newline
-    return now;
+  std::string now = std::ctime ( &m_last );
+  now.resize (now.length () - 1);  // trim trailing newline
+  return now;
 }
 
 std::time_t
-SystemWallClockTimestamp::GetLast() const
+SystemWallClockTimestamp::GetLast (void) const
 {
-    return m_last;
+  return m_last;
 }
 
 std::time_t
-SystemWallClockTimestamp::GetInterval() const
+SystemWallClockTimestamp::GetInterval (void) const
 {
-    return m_diff;
+  return m_diff;
 }
 
-} // namespace ns3
+  
+
+}  // namespace ns3
+

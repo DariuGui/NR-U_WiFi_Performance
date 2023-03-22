@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 CTTC
  *
@@ -20,13 +21,19 @@
 #ifndef FREQS_ISM2400MHZ_RES1MHZ_H
 #define FREQS_ISM2400MHZ_RES1MHZ_H
 
+
 #include <ns3/spectrum-value.h>
 
-namespace ns3
-{
+namespace ns3 {
+
 
 extern Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz;
 
+
 }
+
+
+
+
 
 #endif /* FREQS_ISM2400MHZ_RES1MHZ_H */

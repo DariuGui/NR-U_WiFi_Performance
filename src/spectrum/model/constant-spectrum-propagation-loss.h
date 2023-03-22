@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -22,8 +23,7 @@
 
 #include "ns3/spectrum-propagation-loss-model.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup spectrum
@@ -32,35 +32,36 @@ namespace ns3
  */
 class ConstantSpectrumPropagationLossModel : public SpectrumPropagationLossModel
 {
-  public:
-    ConstantSpectrumPropagationLossModel();
-    ~ConstantSpectrumPropagationLossModel() override;
+public:
+  ConstantSpectrumPropagationLossModel ();
+  ~ConstantSpectrumPropagationLossModel ();
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId ();
 
-    Ptr<SpectrumValue> DoCalcRxPowerSpectralDensity(Ptr<const SpectrumSignalParameters> params,
-                                                    Ptr<const MobilityModel> a,
-                                                    Ptr<const MobilityModel> b) const override;
-    /**
-     * Set the propagation loss
-     * \param lossDb the propagation loss [dB]
-     */
-    void SetLossDb(double lossDb);
-    /**
-     * Get the propagation loss
-     * \returns the propagation loss [dB]
-     */
-    double GetLossDb() const;
+  virtual Ptr<SpectrumValue> DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
+                                                           Ptr<const MobilityModel> a,
+                                                           Ptr<const MobilityModel> b) const;
+  /**
+   * Set the propagation loss
+   * \param lossDb the propagation loss [dB]
+   */
+  void SetLossDb (double lossDb);
+  /**
+   * Get the propagation loss
+   * \returns the propagation loss [dB]
+   */
+  double GetLossDb () const;
 
-  protected:
-    double m_lossDb;     //!< Propagation loss [dB]
-    double m_lossLinear; //!< Propagation loss (linear)
-  private:
+protected:
+  double m_lossDb;      //!< Propagation loss [dB]
+  double m_lossLinear;  //!< Propagation loss (linear)
+private:
 };
+
 
 } // namespace ns3
 

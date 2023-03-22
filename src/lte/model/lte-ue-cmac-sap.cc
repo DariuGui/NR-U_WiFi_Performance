@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -17,16 +18,18 @@
  * Author: Marco Miozzo <mmiozzo@cttc.es>
  */
 
+
 #include "lte-ue-cmac-sap.h"
 
-namespace ns3
-{
 
-LteUeCmacSapProvider::~LteUeCmacSapProvider()
+namespace ns3 {
+
+
+LteUeCmacSapProvider::~LteUeCmacSapProvider ()
 {
 }
 
-LteUeCmacSapUser::~LteUeCmacSapUser()
+LteUeCmacSapUser::~LteUeCmacSapUser ()
 {
 }
 

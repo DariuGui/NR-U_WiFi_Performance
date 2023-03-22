@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 CTTC
  *
@@ -17,82 +18,94 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
+#include <ns3/log.h>
 #include "aloha-noack-mac-header.h"
 
-#include <ns3/log.h>
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("AlohaNoackMacHeader");
+NS_LOG_COMPONENT_DEFINE ("AlohaNoackMacHeader");
 
-NS_OBJECT_ENSURE_REGISTERED(AlohaNoackMacHeader);
+NS_OBJECT_ENSURE_REGISTERED (AlohaNoackMacHeader);
 
 TypeId
-AlohaNoackMacHeader::GetTypeId()
+AlohaNoackMacHeader::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::AlohaNoackMacHeader")
-                            .SetParent<Header>()
-                            .SetGroupName("Spectrum")
-                            .AddConstructor<AlohaNoackMacHeader>();
-    return tid;
+  static TypeId tid = TypeId ("ns3::AlohaNoackMacHeader")
+    .SetParent<Header> ()
+    .SetGroupName ("Spectrum")
+    .AddConstructor<AlohaNoackMacHeader> ()
+  ;
+  return tid;
 }
 
 TypeId
-AlohaNoackMacHeader::GetInstanceTypeId() const
+AlohaNoackMacHeader::GetInstanceTypeId (void) const
 {
-    return GetTypeId();
+  return GetTypeId ();
+}
+
+
+
+uint32_t
+AlohaNoackMacHeader::GetSerializedSize (void) const
+{
+  return 12;
+}
+
+
+
+void
+AlohaNoackMacHeader::Serialize (Buffer::Iterator start) const
+{
+  WriteTo (start, m_destination);
+  WriteTo (start, m_source);
 }
 
 uint32_t
-AlohaNoackMacHeader::GetSerializedSize() const
+AlohaNoackMacHeader::Deserialize (Buffer::Iterator start)
 {
-    return 12;
+  ReadFrom (start, m_destination);
+  ReadFrom (start, m_source);
+  return GetSerializedSize ();
 }
+
 
 void
-AlohaNoackMacHeader::Serialize(Buffer::Iterator start) const
+AlohaNoackMacHeader::Print (std::ostream &os) const
 {
-    WriteTo(start, m_destination);
-    WriteTo(start, m_source);
+  os << "src="  << m_source
+     << "dst="  << m_destination;
 }
 
-uint32_t
-AlohaNoackMacHeader::Deserialize(Buffer::Iterator start)
-{
-    ReadFrom(start, m_destination);
-    ReadFrom(start, m_source);
-    return GetSerializedSize();
-}
 
 void
-AlohaNoackMacHeader::Print(std::ostream& os) const
+AlohaNoackMacHeader::SetSource (Mac48Address source)
 {
-    os << "src=" << m_source << "dst=" << m_destination;
-}
-
-void
-AlohaNoackMacHeader::SetSource(Mac48Address source)
-{
-    m_source = source;
+  m_source = source;
 }
 
 Mac48Address
-AlohaNoackMacHeader::GetSource() const
+AlohaNoackMacHeader::GetSource () const
 {
-    return m_source;
+  return m_source;
 }
 
 void
-AlohaNoackMacHeader::SetDestination(Mac48Address dst)
+AlohaNoackMacHeader::SetDestination (Mac48Address dst)
 {
-    m_destination = dst;
+  m_destination = dst;
 }
 
 Mac48Address
-AlohaNoackMacHeader::GetDestination() const
+AlohaNoackMacHeader::GetDestination () const
 {
-    return m_destination;
+  return m_destination;
 }
+
+
+
 
 } // namespace ns3
+
+

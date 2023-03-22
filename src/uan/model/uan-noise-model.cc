@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 University of Washington
  *
@@ -19,28 +20,31 @@
 
 #include "uan-noise-model.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED(UanNoiseModel);
+NS_OBJECT_ENSURE_REGISTERED (UanNoiseModel);
 
-TypeId
-UanNoiseModel::GetTypeId()
+TypeId UanNoiseModel::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::UanNoiseModel").SetParent<Object>().SetGroupName("Uan");
-    return tid;
+  static TypeId tid = TypeId ("ns3::UanNoiseModel")
+    .SetParent<Object> ()
+    .SetGroupName ("Uan")
+  ;
+  return tid;
 }
 
-void
-UanNoiseModel::Clear()
+void 
+UanNoiseModel::Clear (void)
 {
 }
 
-void
-UanNoiseModel::DoDispose()
+void 
+UanNoiseModel::DoDispose (void)
 {
-    Clear();
-    Object::DoDispose();
+  Clear ();
+  Object::DoDispose ();
 }
+
+
 
 } // namespace ns3

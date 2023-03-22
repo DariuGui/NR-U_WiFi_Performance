@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -19,14 +20,14 @@
 
 #include "ff-mac-sched-sap.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-FfMacSchedSapProvider::~FfMacSchedSapProvider()
+
+FfMacSchedSapProvider::~FfMacSchedSapProvider ()
 {
 }
 
-FfMacSchedSapUser::~FfMacSchedSapUser()
+FfMacSchedSapUser::~FfMacSchedSapUser ()
 {
 }
 

@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2016 Universita' degli Studi di Napoli Federico II
  *
@@ -18,27 +19,28 @@
  *          Stefano Avallone <stefano.avallone@unina.it>
  */
 
+#include "ns3/log.h"
 #include "queue-limits.h"
 
-#include "ns3/log.h"
+namespace ns3 {
 
-namespace ns3
-{
+NS_LOG_COMPONENT_DEFINE ("QueueLimits");
 
-NS_LOG_COMPONENT_DEFINE("QueueLimits");
-
-NS_OBJECT_ENSURE_REGISTERED(QueueLimits);
+NS_OBJECT_ENSURE_REGISTERED (QueueLimits);
 
 TypeId
-QueueLimits::GetTypeId()
+QueueLimits::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::QueueLimits").SetParent<Object>().SetGroupName("Network");
-    return tid;
+  static TypeId tid = TypeId ("ns3::QueueLimits")
+    .SetParent<Object> ()
+    .SetGroupName ("Network")
+  ;
+  return tid;
 }
 
-QueueLimits::~QueueLimits()
+QueueLimits::~QueueLimits ()
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
 } // namespace ns3

@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -22,8 +23,7 @@
 
 #include "ns3/packet.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * Service Access Point (SAP) offered by the UM-RLC and AM-RLC entities to the PDCP entity
@@ -34,27 +34,28 @@ namespace ns3
  */
 class LteRlcSapProvider
 {
-  public:
-    virtual ~LteRlcSapProvider();
+public:
+  virtual ~LteRlcSapProvider ();
 
-    /**
-     * Parameters for LteRlcSapProvider::TransmitPdcpPdu
-     */
-    struct TransmitPdcpPduParameters
-    {
-        Ptr<Packet> pdcpPdu; /**< the PDCP PDU */
-        uint16_t rnti;       /**< the C-RNTI identifying the UE */
-        uint8_t lcid; /**< the logical channel id corresponding to the sending RLC instance */
-    };
+  /**
+   * Parameters for LteRlcSapProvider::TransmitPdcpPdu
+   */
+  struct TransmitPdcpPduParameters
+  {
+    Ptr<Packet> pdcpPdu;  /**< the PDCP PDU */
+    uint16_t    rnti; /**< the C-RNTI identifying the UE */
+    uint8_t     lcid; /**< the logical channel id corresponding to the sending RLC instance */
+  };
 
-    /**
-     * Send a PDCP PDU to the RLC for transmission
-     * This method is to be called
-     * when upper PDCP entity has a PDCP PDU ready to send
-     * \param params the TransmitPdcpPduParameters
-     */
-    virtual void TransmitPdcpPdu(TransmitPdcpPduParameters params) = 0;
+  /**
+   * Send a PDCP PDU to the RLC for transmission
+   * This method is to be called
+   * when upper PDCP entity has a PDCP PDU ready to send
+   * \param params the TransmitPdcpPduParameters
+   */
+  virtual void TransmitPdcpPdu (TransmitPdcpPduParameters params) = 0;
 };
+
 
 /**
  * Service Access Point (SAP) offered by the UM-RLC and AM-RLC entities to the PDCP entity
@@ -65,89 +66,96 @@ class LteRlcSapProvider
  */
 class LteRlcSapUser
 {
-  public:
-    virtual ~LteRlcSapUser();
+public:
+  virtual ~LteRlcSapUser ();
 
-    /**
-     * Called by the RLC entity to notify the PDCP entity of the reception of a new PDCP PDU
-     *
-     * \param p the PDCP PDU
-     */
-    virtual void ReceivePdcpPdu(Ptr<Packet> p) = 0;
+  /**
+  * Called by the RLC entity to notify the PDCP entity of the reception of a new PDCP PDU
+  *
+  * \param p the PDCP PDU
+  */
+  virtual void ReceivePdcpPdu (Ptr<Packet> p) = 0;
 };
+
 
 /// LteRlcSpecificLteRlcSapProvider
 template <class C>
 class LteRlcSpecificLteRlcSapProvider : public LteRlcSapProvider
 {
-  public:
-    /**
-     * Constructor
-     *
-     * \param rlc the RLC
-     */
-    LteRlcSpecificLteRlcSapProvider(C* rlc);
+public:
+  /**
+   * Constructor
+   *
+   * \param rlc the RLC
+   */
+  LteRlcSpecificLteRlcSapProvider (C* rlc);
 
-    // Delete default constructor to avoid misuse
-    LteRlcSpecificLteRlcSapProvider() = delete;
+  /**
+   * Interface implemented from LteRlcSapProvider
+   * \param params the TransmitPdcpPduParameters
+   */
+  virtual void TransmitPdcpPdu (TransmitPdcpPduParameters params);
 
-    /**
-     * Interface implemented from LteRlcSapProvider
-     * \param params the TransmitPdcpPduParameters
-     */
-    void TransmitPdcpPdu(TransmitPdcpPduParameters params) override;
-
-  private:
-    C* m_rlc; ///< the RLC
+private:
+  LteRlcSpecificLteRlcSapProvider ();
+  C* m_rlc; ///< the RLC
 };
 
 template <class C>
-LteRlcSpecificLteRlcSapProvider<C>::LteRlcSpecificLteRlcSapProvider(C* rlc)
-    : m_rlc(rlc)
+LteRlcSpecificLteRlcSapProvider<C>::LteRlcSpecificLteRlcSapProvider (C* rlc)
+  : m_rlc (rlc)
 {
 }
 
 template <class C>
-void
-LteRlcSpecificLteRlcSapProvider<C>::TransmitPdcpPdu(TransmitPdcpPduParameters params)
+LteRlcSpecificLteRlcSapProvider<C>::LteRlcSpecificLteRlcSapProvider ()
 {
-    m_rlc->DoTransmitPdcpPdu(params.pdcpPdu);
 }
+
+template <class C>
+void LteRlcSpecificLteRlcSapProvider<C>::TransmitPdcpPdu (TransmitPdcpPduParameters params)
+{
+  m_rlc->DoTransmitPdcpPdu (params.pdcpPdu);
+}
+
 
 /// LteRlcSpecificLteRlcSapUser class
 template <class C>
 class LteRlcSpecificLteRlcSapUser : public LteRlcSapUser
 {
-  public:
-    /**
-     * Constructor
-     *
-     * \param pdcp the PDCP
-     */
-    LteRlcSpecificLteRlcSapUser(C* pdcp);
+public:
+  /**
+   * Constructor
+   *
+   * \param pdcp the PDCP
+   */
+  LteRlcSpecificLteRlcSapUser (C* pdcp);
 
-    // Delete default constructor to avoid misuse
-    LteRlcSpecificLteRlcSapUser() = delete;
+  // Interface implemented from LteRlcSapUser
+  virtual void ReceivePdcpPdu (Ptr<Packet> p);
 
-    // Interface implemented from LteRlcSapUser
-    void ReceivePdcpPdu(Ptr<Packet> p) override;
-
-  private:
-    C* m_pdcp; ///< the PDCP
+private:
+  LteRlcSpecificLteRlcSapUser ();
+  C* m_pdcp; ///< the PDCP
 };
 
 template <class C>
-LteRlcSpecificLteRlcSapUser<C>::LteRlcSpecificLteRlcSapUser(C* pdcp)
-    : m_pdcp(pdcp)
+LteRlcSpecificLteRlcSapUser<C>::LteRlcSpecificLteRlcSapUser (C* pdcp)
+  : m_pdcp (pdcp)
 {
 }
 
 template <class C>
-void
-LteRlcSpecificLteRlcSapUser<C>::ReceivePdcpPdu(Ptr<Packet> p)
+LteRlcSpecificLteRlcSapUser<C>::LteRlcSpecificLteRlcSapUser ()
 {
-    m_pdcp->DoReceivePdcpPdu(p);
 }
+
+template <class C>
+void LteRlcSpecificLteRlcSapUser<C>::ReceivePdcpPdu (Ptr<Packet> p)
+{
+  m_pdcp->DoReceivePdcpPdu (p);
+}
+
 
 } // namespace ns3
 

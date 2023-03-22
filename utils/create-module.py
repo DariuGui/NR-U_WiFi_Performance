@@ -7,142 +7,148 @@ import shutil
 
 from pathlib import Path
 
-CMAKELISTS_TEMPLATE = '''\
-check_include_file_cxx(stdint.h HAVE_STDINT_H)
-if(HAVE_STDINT_H)
-    add_definitions(-DHAVE_STDINT_H)
-endif()
+WSCRIPT_TEMPLATE = '''# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
 
-set(examples_as_tests_sources)
-if(${{ENABLE_EXAMPLES}})
-    set(examples_as_tests_sources
-        #test/{MODULE}-examples-test-suite.cc
-        )
-endif()
+# def options(opt):
+#     pass
 
-build_lib(
-    LIBNAME {MODULE}
-    SOURCE_FILES model/{MODULE}.cc
-                 helper/{MODULE}-helper.cc
-    HEADER_FILES model/{MODULE}.h
-                 helper/{MODULE}-helper.h
-    LIBRARIES_TO_LINK ${{libcore}}
-    TEST_SOURCES test/{MODULE}-test-suite.cc
-                 ${{examples_as_tests_sources}}
-)
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module({MODULE!r}, ['core'])
+    module.source = [
+        'model/{MODULE}.cc',
+        'helper/{MODULE}-helper.cc',
+        ]
+
+    module_test = bld.create_ns3_module_test_library('{MODULE}')
+    module_test.source = [
+        'test/{MODULE}-test-suite.cc',
+        ]
+    # Tests encapsulating example programs should be listed here
+    if (bld.env['ENABLE_EXAMPLES']):
+        module_test.source.extend([
+        #    'test/{MODULE}-examples-test-suite.cc',
+             ])
+
+    headers = bld(features='ns3header')
+    headers.module = {MODULE!r}
+    headers.source = [
+        'model/{MODULE}.h',
+        'helper/{MODULE}-helper.h',
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
 
 '''
 
 
-MODEL_CC_TEMPLATE = '''\
+
+MODEL_CC_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+
 #include "{MODULE}.h"
 
-namespace ns3
-{{
+namespace ns3 {{
 
 /* ... */
 
+
 }}
+
 '''
 
 
-MODEL_H_TEMPLATE = '''\
+
+MODEL_H_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 #ifndef {INCLUDE_GUARD}
 #define {INCLUDE_GUARD}
 
-// Add a doxygen group for this module.
-// If you have more than one file, this should be in only one of them.
-/**
- * \defgroup {MODULE} Description of the {MODULE}
- */
-
-namespace ns3
-{{
-
-// Each class should be documented using Doxygen,
-// and have an \ingroup {MODULE} directive
+namespace ns3 {{
 
 /* ... */
 
 }}
 
 #endif /* {INCLUDE_GUARD} */
+
 '''
 
 
-HELPER_CC_TEMPLATE = '''\
+
+HELPER_CC_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+
 #include "{MODULE}-helper.h"
 
-namespace ns3
-{{
+namespace ns3 {{
 
 /* ... */
 
+
 }}
+
 '''
 
 
-HELPER_H_TEMPLATE = '''\
+
+HELPER_H_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 #ifndef {INCLUDE_GUARD}
 #define {INCLUDE_GUARD}
 
 #include "ns3/{MODULE}.h"
 
-namespace ns3
-{{
-
-// Each class should be documented using Doxygen,
-// and have an \ingroup {MODULE} directive
+namespace ns3 {{
 
 /* ... */
 
 }}
 
 #endif /* {INCLUDE_GUARD} */
-'''
-
-
-EXAMPLES_CMAKELISTS_TEMPLATE = '''\
-build_lib_example(
-    NAME {MODULE}-example
-    SOURCE_FILES {MODULE}-example.cc
-    LIBRARIES_TO_LINK ${{lib{MODULE}}}
-)
 
 '''
 
-EXAMPLE_CC_TEMPLATE = '''\
+
+EXAMPLES_WSCRIPT_TEMPLATE = '''# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    obj = bld.create_ns3_program('{MODULE}-example', [{MODULE!r}])
+    obj.source = '{MODULE}-example.cc'
+
+'''
+
+EXAMPLE_CC_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+
 #include "ns3/core-module.h"
 #include "ns3/{MODULE}-helper.h"
 
-/**
- * \\file
- *
- * Explain here what the example does.
- */
-
 using namespace ns3;
 
-int
-main(int argc, char* argv[])
+
+int 
+main (int argc, char *argv[])
 {{
-    bool verbose = true;
+  bool verbose = true;
 
-    CommandLine cmd(__FILE__);
-    cmd.AddValue("verbose", "Tell application to log if true", verbose);
+  CommandLine cmd (__FILE__);
+  cmd.AddValue ("verbose", "Tell application to log if true", verbose);
 
-    cmd.Parse(argc, argv);
+  cmd.Parse (argc,argv);
 
-    /* ... */
+  /* ... */
 
-    Simulator::Run();
-    Simulator::Destroy();
-    return 0;
+  Simulator::Run ();
+  Simulator::Destroy ();
+  return 0;
 }}
+
+
 '''
 
 
-TEST_CC_TEMPLATE = '''\
+TEST_CC_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 
 // Include a header file from your module to test.
 #include "ns3/{MODULE}.h"
@@ -154,38 +160,26 @@ TEST_CC_TEMPLATE = '''\
 // to use the using directive to access the ns3 namespace directly
 using namespace ns3;
 
-// Add a doxygen group for tests.
-// If you have more than one test, this should be in only one of them.
-/**
- * \defgroup {MODULE}-tests Tests for {MODULE}
- * \ingroup {MODULE}
- * \ingroup tests
- */
-
 // This is an example TestCase.
-/**
- * \ingroup {MODULE}-tests
- * Test case for feature 1
- */
 class {CAPITALIZED}TestCase1 : public TestCase
 {{
-  public:
-    {CAPITALIZED}TestCase1();
-    virtual ~{CAPITALIZED}TestCase1();
+public:
+  {CAPITALIZED}TestCase1 ();
+  virtual ~{CAPITALIZED}TestCase1 ();
 
-  private:
-    void DoRun() override;
+private:
+  virtual void DoRun (void);
 }};
 
 // Add some help text to this case to describe what it is intended to test
-{CAPITALIZED}TestCase1::{CAPITALIZED}TestCase1()
-    : TestCase("{CAPITALIZED} test case (does nothing)")
+{CAPITALIZED}TestCase1::{CAPITALIZED}TestCase1 ()
+  : TestCase ("{CAPITALIZED} test case (does nothing)")
 {{
 }}
 
 // This destructor does nothing but we include it as a reminder that
 // the test case should clean up after itself
-{CAPITALIZED}TestCase1::~{CAPITALIZED}TestCase1()
+{CAPITALIZED}TestCase1::~{CAPITALIZED}TestCase1 ()
 {{
 }}
 
@@ -194,41 +188,34 @@ class {CAPITALIZED}TestCase1 : public TestCase
 // TestCase must implement
 //
 void
-{CAPITALIZED}TestCase1::DoRun()
+{CAPITALIZED}TestCase1::DoRun (void)
 {{
-    // A wide variety of test macros are available in src/core/test.h
-    NS_TEST_ASSERT_MSG_EQ(true, true, "true doesn\'t equal true for some reason");
-    // Use this one for floating point comparisons
-    NS_TEST_ASSERT_MSG_EQ_TOL(0.01, 0.01, 0.001, "Numbers are not equal within tolerance");
+  // A wide variety of test macros are available in src/core/test.h
+  NS_TEST_ASSERT_MSG_EQ (true, true, "true doesn\'t equal true for some reason");
+  // Use this one for floating point comparisons
+  NS_TEST_ASSERT_MSG_EQ_TOL (0.01, 0.01, 0.001, "Numbers are not equal within tolerance");
 }}
 
 // The TestSuite class names the TestSuite, identifies what type of TestSuite,
 // and enables the TestCases to be run.  Typically, only the constructor for
 // this class must be defined
-
-/**
- * \ingroup {MODULE}-tests
- * TestSuite for module {MODULE}
- */
+//
 class {CAPITALIZED}TestSuite : public TestSuite
 {{
-  public:
-    {CAPITALIZED}TestSuite();
+public:
+  {CAPITALIZED}TestSuite ();
 }};
 
-{CAPITALIZED}TestSuite::{CAPITALIZED}TestSuite()
-    : TestSuite("{MODULE}", UNIT)
+{CAPITALIZED}TestSuite::{CAPITALIZED}TestSuite ()
+  : TestSuite ("{MODULE}", UNIT)
 {{
-    // TestDuration for TestCase can be QUICK, EXTENSIVE or TAKES_FOREVER
-    AddTestCase(new {CAPITALIZED}TestCase1, TestCase::QUICK);
+  // TestDuration for TestCase can be QUICK, EXTENSIVE or TAKES_FOREVER
+  AddTestCase (new {CAPITALIZED}TestCase1, TestCase::QUICK);
 }}
 
 // Do not forget to allocate an instance of this TestSuite
-/**
- * \ingroup {MODULE}-tests
- * Static variable for test initialization
- */
 static {CAPITALIZED}TestSuite s{COMPOUND}TestSuite;
+
 '''
 
 
@@ -264,8 +251,8 @@ Add here a basic description of what is being modeled.
 Design
 ======
 
-Briefly describe the software design of the model and how it fits into
-the existing ns-3 architecture.
+Briefly describe the software design of the model and how it fits into 
+the existing ns-3 architecture. 
 
 Scope and Limitations
 =====================
@@ -328,7 +315,7 @@ Validation
 **********
 
 Describe how the model has been tested/validated.  What tests run in the
-test suite?  How much API and code is covered by the tests?  Again,
+test suite?  How much API and code is covered by the tests?  Again, 
 references to outside published work may help here.
 '''
 
@@ -339,14 +326,11 @@ def create_file(path, template, **kwargs):
     with artifact_path.open("wt") as f:
         f.write(template.format(**kwargs))
 
+def make_wscript(moduledir, modname):
+    path = Path(moduledir, 'wscript')
+    create_file(path, WSCRIPT_TEMPLATE, MODULE=modname)
 
-def make_cmakelists(moduledir, modname):
-    path = Path(moduledir, 'CMakeLists.txt')
-    macro = "build_lib"
-    create_file(path, CMAKELISTS_TEMPLATE, MODULE=modname)
-
-    return True
-
+    return True 
 
 def make_model(moduledir, modname):
     modelpath = Path(moduledir, "model")
@@ -357,11 +341,11 @@ def make_model(moduledir, modname):
 
     hfile_path = modelpath.joinpath(modname).with_suffix('.h')
     guard = "{}_H".format(modname.replace('-', '_').upper())
-    create_file(hfile_path, MODEL_H_TEMPLATE,
-                MODULE=modname,
+    create_file(hfile_path, MODEL_H_TEMPLATE, 
+                MODULE=modname, 
                 INCLUDE_GUARD=guard)
 
-    return True
+    return True 
 
 
 def make_test(moduledir, modname):
@@ -374,7 +358,7 @@ def make_test(moduledir, modname):
                 CAPITALIZED=''.join([word.capitalize() for word in name_parts]),
                 COMPOUND=''.join([word.capitalize() if index > 0 else word for index, word in enumerate(name_parts)]))
 
-    return True
+    return True 
 
 
 def make_helper(moduledir, modname):
@@ -388,20 +372,20 @@ def make_helper(moduledir, modname):
     guard = "{}_HELPER_H".format(modname.replace('-', '_').upper())
     create_file(h_file_path, HELPER_H_TEMPLATE, MODULE=modname, INCLUDE_GUARD=guard)
 
-    return True
+    return True 
 
 
 def make_examples(moduledir, modname):
     examplespath = Path(moduledir, "examples")
     examplespath.mkdir(parents=True)
 
-    cmakelistspath = Path(examplespath, 'CMakeLists.txt')
-    create_file(cmakelistspath, EXAMPLES_CMAKELISTS_TEMPLATE, MODULE=modname)
+    wscriptpath = Path(examplespath, 'wscript')
+    create_file(wscriptpath, EXAMPLES_WSCRIPT_TEMPLATE, MODULE=modname)
 
     examplesfile_path = examplespath.joinpath(modname+'-example').with_suffix('.cc')
     create_file(examplesfile_path, EXAMPLE_CC_TEMPLATE, MODULE=modname)
 
-    return True
+    return True 
 
 
 def make_doc(moduledir, modname):
@@ -414,10 +398,10 @@ def make_doc(moduledir, modname):
 
     file_name = '{}.rst'.format(modname)
     file_path = Path(docpath, file_name)
-    create_file(file_path, DOC_RST_TEMPLATE, MODULE=modname, MODULE_DIR=mod_relpath)
+    create_file(file_path, DOC_RST_TEMPLATE, MODULE=modname,
+                MODULE_DIR=mod_relpath)
 
-    return True
-
+    return True 
 
 def make_module(modpath, modname):
     modulepath = Path(modpath, modname)
@@ -428,7 +412,7 @@ def make_module(modpath, modname):
 
     print("Creating module {}".format(modulepath))
 
-    functions = (make_cmakelists, make_model, make_test,
+    functions = (make_wscript, make_model, make_test, 
                  make_helper, make_examples, make_doc)
 
     try:
@@ -454,17 +438,17 @@ def create_argument_parser():
 
 Generates the directory structure and skeleton files required for an ns-3
 module.  All of the generated files are valid C/C++ and will compile successfully
-out of the box.  ns3 configure must be run after creating new modules in order
+out of the box.  waf configure must be run after creating new modules in order
 to integrate them into the ns-3 build system.
 
 The following directory structure is generated under the contrib directory:
 <modname>
- |-- CMakeLists.txt
+ |-- wscript
  |-- doc
      |-- <modname>.rst
  |-- examples
      |-- <modname>-example.cc
-     |-- CMakeLists.txt
+     |-- wscript
  |-- helper
      |-- <modname>-helper.cc
      |-- <modname>-helper.h
@@ -476,13 +460,13 @@ The following directory structure is generated under the contrib directory:
 
 
 <modname> is the name of the module and is restricted to the following
-character groups: letters, numbers, -, _
+character groups: letters, numbers, -, _ 
 The script validates the module name and skips modules that have characters
-outside of the above groups.  One exception to the naming rule is that src/
-or contrib/ may be added to the front of the module name to indicate where the
-module scaffold should be created.  If the module name starts with src/, then
-the module is placed in the src directory.  If the module name starts with
-contrib/, then the module is placed in the contrib directory.  If the module
+outside of the above groups.  One exception to the naming rule is that src/ 
+or contrib/ may be added to the front of the module name to indicate where the 
+module scaffold should be created.  If the module name starts with src/, then 
+the module is placed in the src directory.  If the module name starts with 
+contrib/, then the module is placed in the contrib directory.  If the module 
 name does not start with src/ or contrib/, then it defaults to contrib/.
 See the examples section for use cases.
 
@@ -490,10 +474,10 @@ See the examples section for use cases.
 In some situations it can be useful to group multiple related modules under one
 directory.  Use the --project option to specify a common parent directory where
 the modules should be generated.  The value passed to --project is treated
-as a relative path.  The path components have the same naming requirements as
+as a relative path.  The path components have the same naming requirements as 
 the module name: letters, numbers, -, _
 The project directory is placed under the contrib directory and any parts of the
-path that do not exist will be created.  Creating projects in the src directory
+path that do not exist will be created.  Creating projects in the src directory 
 is not supported.  Module names that start with src/ are not allowed when
 --project is used.  Module names that start with contrib/ are treated the same
 as module names that don't start with contrib/ and are generated under the
@@ -547,14 +531,14 @@ project directory.
     return parser
 
 def main(argv):
-    parser = create_argument_parser()
+    parser = create_argument_parser() 
 
     args = parser.parse_args(argv[1:])
 
     project = args.project
     modnames = args.modnames
 
-    base_path = Path.cwd()
+    base_path = Path.cwd() 
 
     src_path = base_path.joinpath('src')
     contrib_path = base_path.joinpath('contrib')
@@ -572,7 +556,7 @@ def main(argv):
     # Alphanumeric and '-' only
     allowedRE = re.compile('^(\w|-)+$')
 
-    project_path = None
+    project_path = None 
 
     if project:
         #project may be a path in the form a/b/c
@@ -583,7 +567,7 @@ def main(argv):
             #remove leading separator
             project_path = project_path.relative_to(os.sep)
 
-        if not all(allowedRE.match(part) for part in project_path.parts):
+        if not all(allowedRE.match(part) for part in project_path.parts): 
             parser.error('Project path may only contain the characters [a-zA-Z0-9_-].')
     #
     # Create each module, if it doesn't exist
@@ -591,7 +575,7 @@ def main(argv):
     modules = []
     for name in modnames:
         if name:
-            #remove any leading or trailing directory separators
+            #remove any leading or trailing directory separators 
             name = name.strip(os.sep)
 
         if not name:
@@ -605,7 +589,7 @@ def main(argv):
             continue
 
         #default target directory is contrib
-        modpath = contrib_path
+        modpath = contrib_path 
 
         if name_path.parts[0] == 'src':
             if project:
@@ -614,13 +598,13 @@ def main(argv):
             modpath = src_path
 
             #create a new path without the src part
-            name_path = name_path.relative_to('src')
+            name_path = name_path.relative_to('src') 
 
         elif name_path.parts[0] == 'contrib':
             modpath = contrib_path
 
             #create a new path without the contrib part
-            name_path = name_path.relative_to('contrib')
+            name_path = name_path.relative_to('contrib') 
 
         if project_path:
             #if a project path was specified, that overrides other paths
@@ -634,12 +618,12 @@ def main(argv):
             continue
 
         modules.append((modpath, modname))
-
+        
     if all(make_module(*module) for module in modules):
         print()
         print("Successfully created new modules")
-        print("Run './ns3 configure' to include them in the build")
-
+        print("Run './waf configure' to include them in the build")
+        
     return 0
 
 if __name__ == '__main__':
@@ -648,6 +632,6 @@ if __name__ == '__main__':
         return_value = main(sys.argv)
     except Exception as e:
         print("Exception: '{}'".format(e), file=sys.stderr)
-        return_value = 1
+        return_value = 1 
 
     sys.exit(return_value)

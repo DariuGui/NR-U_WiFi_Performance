@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2014 Piotr Gawlowicz
  *
@@ -20,15 +21,18 @@
 
 #include "lte-ffr-sap.h"
 
-namespace ns3
-{
 
-LteFfrSapProvider::~LteFfrSapProvider()
+namespace ns3 {
+
+
+LteFfrSapProvider::~LteFfrSapProvider ()
 {
 }
 
-LteFfrSapUser::~LteFfrSapUser()
+
+LteFfrSapUser::~LteFfrSapUser ()
 {
 }
+
 
 } // namespace ns3

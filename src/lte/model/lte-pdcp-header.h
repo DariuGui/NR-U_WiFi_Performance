@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -24,8 +25,7 @@
 
 #include <list>
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup lte
@@ -37,62 +37,63 @@ namespace ns3
  */
 class LtePdcpHeader : public Header
 {
-  public:
-    /**
-     * \brief Constructor
-     *
-     * Creates a null header
-     */
-    LtePdcpHeader();
-    ~LtePdcpHeader() override;
+public:
 
-    /**
-     * \brief Set DC bit
-     *
-     * \param dcBit DC bit to set
-     */
-    void SetDcBit(uint8_t dcBit);
-    /**
-     * \brief Set sequence number
-     *
-     * \param sequenceNumber sequence number
-     */
-    void SetSequenceNumber(uint16_t sequenceNumber);
+  /**
+   * \brief Constructor
+   *
+   * Creates a null header
+   */
+  LtePdcpHeader ();
+  ~LtePdcpHeader ();
 
-    /**
-     * \brief Get DC bit
-     *
-     * \returns DC bit
-     */
-    uint8_t GetDcBit() const;
-    /**
-     * \brief Get sequence number
-     *
-     * \returns sequence number
-     */
-    uint16_t GetSequenceNumber() const;
+  /**
+   * \brief Set DC bit
+   *
+   * \param dcBit DC bit to set
+   */
+  void SetDcBit (uint8_t dcBit);
+  /**
+   * \brief Set sequence number
+   *
+   * \param sequenceNumber sequence number
+   */
+  void SetSequenceNumber (uint16_t sequenceNumber);
 
-    /// DcBit_t typedef
-    enum
-    {
-        CONTROL_PDU = 0,
-        DATA_PDU = 1
-    } DcBit_t; ///< DcBit_t typedef
+  /**
+   * \brief Get DC bit
+   *
+   * \returns DC bit
+   */
+  uint8_t GetDcBit () const;
+  /**
+   * \brief Get sequence number
+   *
+   * \returns sequence number
+   */
+  uint16_t GetSequenceNumber () const;
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    TypeId GetInstanceTypeId() const override;
-    void Print(std::ostream& os) const override;
-    uint32_t GetSerializedSize() const override;
-    void Serialize(Buffer::Iterator start) const override;
-    uint32_t Deserialize(Buffer::Iterator start) override;
+  /// DcBit_t typedef
+  enum {
+    CONTROL_PDU   = 0,
+    DATA_PDU      = 1
+  } DcBit_t; ///< DcBit_t typedef 
 
-  private:
-    uint8_t m_dcBit;           ///< the DC bit
-    uint16_t m_sequenceNumber; ///< the sequence number
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
+  virtual void Print (std::ostream &os) const;
+  virtual uint32_t GetSerializedSize (void) const;
+  virtual void Serialize (Buffer::Iterator start) const;
+  virtual uint32_t Deserialize (Buffer::Iterator start);
+
+private:
+  uint8_t m_dcBit; ///< the DC bit
+  uint16_t m_sequenceNumber; ///< the sequence number
+
 };
 
 } // namespace ns3

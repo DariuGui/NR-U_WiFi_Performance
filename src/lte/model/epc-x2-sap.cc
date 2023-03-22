@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -19,23 +20,23 @@
 
 #include "ns3/epc-x2-sap.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-EpcX2Sap::~EpcX2Sap()
-{
-}
 
-EpcX2Sap::ErabToBeSetupItem::ErabToBeSetupItem()
-    : erabLevelQosParameters(EpsBearer(EpsBearer::GBR_CONV_VOICE))
+EpcX2Sap::~EpcX2Sap ()
 {
 }
 
-EpcX2SapProvider::~EpcX2SapProvider()
+EpcX2Sap::ErabToBeSetupItem::ErabToBeSetupItem () :
+  erabLevelQosParameters (EpsBearer (EpsBearer::GBR_CONV_VOICE))
 {
 }
 
-EpcX2SapUser::~EpcX2SapUser()
+EpcX2SapProvider::~EpcX2SapProvider ()
+{
+}
+
+EpcX2SapUser::~EpcX2SapUser ()
 {
 }
 

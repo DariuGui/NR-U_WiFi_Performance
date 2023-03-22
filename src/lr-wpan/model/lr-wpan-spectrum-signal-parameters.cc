@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 The Boeing Company
  *
@@ -17,33 +18,31 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 #include "lr-wpan-spectrum-signal-parameters.h"
-
 #include <ns3/log.h>
 #include <ns3/packet-burst.h>
 
-namespace ns3
-{
 
-NS_LOG_COMPONENT_DEFINE("LrWpanSpectrumSignalParameters");
+namespace ns3 {
 
-LrWpanSpectrumSignalParameters::LrWpanSpectrumSignalParameters()
+NS_LOG_COMPONENT_DEFINE ("LrWpanSpectrumSignalParameters");
+
+LrWpanSpectrumSignalParameters::LrWpanSpectrumSignalParameters (void)
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
-LrWpanSpectrumSignalParameters::LrWpanSpectrumSignalParameters(
-    const LrWpanSpectrumSignalParameters& p)
-    : SpectrumSignalParameters(p)
+LrWpanSpectrumSignalParameters::LrWpanSpectrumSignalParameters (const LrWpanSpectrumSignalParameters& p)
+  : SpectrumSignalParameters (p)
 {
-    NS_LOG_FUNCTION(this << &p);
-    packetBurst = p.packetBurst->Copy();
+  NS_LOG_FUNCTION (this << &p);
+  packetBurst = p.packetBurst->Copy ();
 }
 
 Ptr<SpectrumSignalParameters>
-LrWpanSpectrumSignalParameters::Copy() const
+LrWpanSpectrumSignalParameters::Copy (void)
 {
-    NS_LOG_FUNCTION(this);
-    return Create<LrWpanSpectrumSignalParameters>(*this);
+  NS_LOG_FUNCTION (this);
+  return Create<LrWpanSpectrumSignalParameters> (*this);
 }
 
 } // namespace ns3

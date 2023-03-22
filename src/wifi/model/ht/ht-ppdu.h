@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Orange Labs
  *
@@ -30,8 +31,7 @@
  * Declaration of ns3::HtPpdu class.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 class WifiPsdu;
 
@@ -43,128 +43,124 @@ class WifiPsdu;
  */
 class HtPpdu : public OfdmPpdu
 {
+public:
+
+  /**
+   * HT PHY header (HT-SIG1/2).
+   * See section 19.3.9 in IEEE 802.11-2016.
+   */
+  class HtSigHeader : public Header
+  {
   public:
+    HtSigHeader ();
+    virtual ~HtSigHeader ();
+
     /**
-     * HT PHY header (HT-SIG1/2).
-     * See section 19.3.9 in IEEE 802.11-2016.
+     * \brief Get the type ID.
+     * \return the object TypeId
      */
-    class HtSigHeader : public Header
-    {
-      public:
-        HtSigHeader();
-        ~HtSigHeader() override;
+    static TypeId GetTypeId (void);
 
-        /**
-         * \brief Get the type ID.
-         * \return the object TypeId
-         */
-        static TypeId GetTypeId();
-
-        TypeId GetInstanceTypeId() const override;
-        void Print(std::ostream& os) const override;
-        uint32_t GetSerializedSize() const override;
-        void Serialize(Buffer::Iterator start) const override;
-        uint32_t Deserialize(Buffer::Iterator start) override;
-
-        /**
-         * Fill the MCS field of HT-SIG.
-         *
-         * \param mcs the MCS field of HT-SIG
-         */
-        void SetMcs(uint8_t mcs);
-        /**
-         * Return the MCS field of HT-SIG.
-         *
-         * \return the MCS field of HT-SIG
-         */
-        uint8_t GetMcs() const;
-        /**
-         * Fill the channel width field of HT-SIG (in MHz).
-         *
-         * \param channelWidth the channel width (in MHz)
-         */
-        void SetChannelWidth(uint16_t channelWidth);
-        /**
-         * Return the channel width (in MHz).
-         *
-         * \return the channel width (in MHz)
-         */
-        uint16_t GetChannelWidth() const;
-        /**
-         * Fill the aggregation field of HT-SIG.
-         *
-         * \param aggregation whether the PSDU contains A-MPDU or not
-         */
-        void SetAggregation(bool aggregation);
-        /**
-         * Return the aggregation field of HT-SIG.
-         *
-         * \return the aggregation field of HT-SIG
-         */
-        bool GetAggregation() const;
-        /**
-         * Fill the short guard interval field of HT-SIG.
-         *
-         * \param sgi whether short guard interval is used or not
-         */
-        void SetShortGuardInterval(bool sgi);
-        /**
-         * Return the short guard interval field of HT-SIG.
-         *
-         * \return the short guard interval field of HT-SIG
-         */
-        bool GetShortGuardInterval() const;
-        /**
-         * Fill the HT length field of HT-SIG (in bytes).
-         *
-         * \param length the HT length field of HT-SIG (in bytes)
-         */
-        void SetHtLength(uint16_t length);
-        /**
-         * Return the HT length field of HT-SIG (in bytes).
-         *
-         * \return the HT length field of HT-SIG (in bytes)
-         */
-        uint16_t GetHtLength() const;
-
-      private:
-        uint8_t m_mcs;         ///< Modulation and Coding Scheme index
-        uint8_t m_cbw20_40;    ///< CBW 20/40
-        uint16_t m_htLength;   ///< HT length
-        uint8_t m_aggregation; ///< Aggregation
-        uint8_t m_sgi;         ///< Short Guard Interval
-    };                         // HtSigHeader
+    TypeId GetInstanceTypeId (void) const override;
+    void Print (std::ostream &os) const override;
+    uint32_t GetSerializedSize (void) const override;
+    void Serialize (Buffer::Iterator start) const override;
+    uint32_t Deserialize (Buffer::Iterator start) override;
 
     /**
-     * Create an HT PPDU.
+     * Fill the MCS field of HT-SIG.
      *
-     * \param psdu the PHY payload (PSDU)
-     * \param txVector the TXVECTOR that was used for this PPDU
-     * \param txCenterFreq the center frequency (MHz) that was used for this PPDU
-     * \param ppduDuration the transmission duration of this PPDU
-     * \param band the WifiPhyBand used for the transmission of this PPDU
-     * \param uid the unique ID of this PPDU
+     * \param mcs the MCS field of HT-SIG
      */
-    HtPpdu(Ptr<const WifiPsdu> psdu,
-           const WifiTxVector& txVector,
-           uint16_t txCenterFreq,
-           Time ppduDuration,
-           WifiPhyBand band,
-           uint64_t uid);
+    void SetMcs (uint8_t mcs);
     /**
-     * Destructor for HtPpdu.
+     * Return the MCS field of HT-SIG.
+     *
+     * \return the MCS field of HT-SIG
      */
-    ~HtPpdu() override;
-
-    Time GetTxDuration() const override;
-    Ptr<WifiPpdu> Copy() const override;
+    uint8_t GetMcs (void) const;
+    /**
+     * Fill the channel width field of HT-SIG (in MHz).
+     *
+     * \param channelWidth the channel width (in MHz)
+     */
+    void SetChannelWidth (uint16_t channelWidth);
+    /**
+     * Return the channel width (in MHz).
+     *
+     * \return the channel width (in MHz)
+     */
+    uint16_t GetChannelWidth (void) const;
+    /**
+     * Fill the aggregation field of HT-SIG.
+     *
+     * \param aggregation whether the PSDU contains A-MPDU or not
+     */
+    void SetAggregation (bool aggregation);
+    /**
+     * Return the aggregation field of HT-SIG.
+     *
+     * \return the aggregation field of HT-SIG
+     */
+    bool GetAggregation (void) const;
+    /**
+     * Fill the short guard interval field of HT-SIG.
+     *
+     * \param sgi whether short guard interval is used or not
+     */
+    void SetShortGuardInterval (bool sgi);
+    /**
+     * Return the short guard interval field of HT-SIG.
+     *
+     * \return the short guard interval field of HT-SIG
+     */
+    bool GetShortGuardInterval (void) const;
+    /**
+     * Fill the HT length field of HT-SIG (in bytes).
+     *
+     * \param length the HT length field of HT-SIG (in bytes)
+     */
+    void SetHtLength (uint16_t length);
+    /**
+     * Return the HT length field of HT-SIG (in bytes).
+     *
+     * \return the HT length field of HT-SIG (in bytes)
+     */
+    uint16_t GetHtLength (void) const;
 
   private:
-    WifiTxVector DoGetTxVector() const override;
+    uint8_t m_mcs;         ///< Modulation and Coding Scheme index
+    uint8_t m_cbw20_40;    ///< CBW 20/40
+    uint16_t m_htLength;   ///< HT length
+    uint8_t m_aggregation; ///< Aggregation
+    uint8_t m_sgi;         ///< Short Guard Interval
+  }; //HtSigHeader
 
-    HtSigHeader m_htSig; //!< the HT-SIG PHY header
-};                       // class HtPpdu
+  /**
+   * Create an HT PPDU.
+   *
+   * \param psdu the PHY payload (PSDU)
+   * \param txVector the TXVECTOR that was used for this PPDU
+   * \param ppduDuration the transmission duration of this PPDU
+   * \param band the WifiPhyBand used for the transmission of this PPDU
+   * \param uid the unique ID of this PPDU
+   */
+  HtPpdu (Ptr<const WifiPsdu> psdu, const WifiTxVector& txVector, Time ppduDuration,
+          WifiPhyBand band, uint64_t uid);
+  /**
+   * Destructor for HtPpdu.
+   */
+  virtual ~HtPpdu ();
 
-} // namespace ns3
+  Time GetTxDuration (void) const override;
+  Ptr<WifiPpdu> Copy (void) const override;
+
+private:
+  WifiTxVector DoGetTxVector (void) const override;
+
+  HtSigHeader m_htSig;  //!< the HT-SIG PHY header
+}; //class HtPpdu
+
+} //namespace ns3
 
 #endif /* HT_PPDU_H */

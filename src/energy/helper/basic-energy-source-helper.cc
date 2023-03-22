@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 Network Security Lab, University of Washington, Seattle.
  *
@@ -18,35 +19,33 @@
  */
 
 #include "basic-energy-source-helper.h"
-
 #include "ns3/energy-source.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-BasicEnergySourceHelper::BasicEnergySourceHelper()
+BasicEnergySourceHelper::BasicEnergySourceHelper ()
 {
-    m_basicEnergySource.SetTypeId("ns3::BasicEnergySource");
+  m_basicEnergySource.SetTypeId ("ns3::BasicEnergySource");
 }
 
-BasicEnergySourceHelper::~BasicEnergySourceHelper()
+BasicEnergySourceHelper::~BasicEnergySourceHelper ()
 {
 }
 
 void
-BasicEnergySourceHelper::Set(std::string name, const AttributeValue& v)
+BasicEnergySourceHelper::Set (std::string name, const AttributeValue &v)
 {
-    m_basicEnergySource.Set(name, v);
+  m_basicEnergySource.Set (name, v);
 }
 
 Ptr<EnergySource>
-BasicEnergySourceHelper::DoInstall(Ptr<Node> node) const
+BasicEnergySourceHelper::DoInstall (Ptr<Node> node) const
 {
-    NS_ASSERT(node);
-    Ptr<EnergySource> source = m_basicEnergySource.Create<EnergySource>();
-    NS_ASSERT(source);
-    source->SetNode(node);
-    return source;
+  NS_ASSERT (node != NULL);
+  Ptr<EnergySource> source = m_basicEnergySource.Create<EnergySource> ();
+  NS_ASSERT (source != NULL);
+  source->SetNode (node);
+  return source;
 }
 
 } // namespace ns3

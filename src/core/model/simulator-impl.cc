@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 INRIA
  *
@@ -17,7 +18,6 @@
  */
 
 #include "simulator-impl.h"
-
 #include "log.h"
 
 /**
@@ -26,18 +26,20 @@
  * ns3::SimulatorImpl implementation.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("SimulatorImpl");
+NS_LOG_COMPONENT_DEFINE ("SimulatorImpl");
 
-NS_OBJECT_ENSURE_REGISTERED(SimulatorImpl);
+NS_OBJECT_ENSURE_REGISTERED (SimulatorImpl);
 
 TypeId
-SimulatorImpl::GetTypeId()
+SimulatorImpl::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::SimulatorImpl").SetParent<Object>().SetGroupName("Core");
-    return tid;
+  static TypeId tid = TypeId ("ns3::SimulatorImpl")
+    .SetParent<Object> ()
+    .SetGroupName ("Core")
+  ;
+  return tid;
 }
 
 } // namespace ns3

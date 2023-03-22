@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2013 University of Washington
  *
@@ -22,133 +23,151 @@
 
 using namespace ns3;
 
-namespace
+namespace {
+
+//===========================================================================
+// Function: CreateCommaSeparatedFile
+//
+//
+// This function creates a file with 2 columns of values and separated
+// by commas.
+//===========================================================================
+
+void CreateCommaSeparatedFile ()
 {
+  using namespace std;
 
-/**
- * This function creates a file with 2 columns of values and separated
- * by commas.
- */
-void
-CreateCommaSeparatedFile()
-{
-    std::string fileName = "file-aggregator-comma-separated.txt";
-    std::string datasetContext = "Dataset/Context/String";
+  string fileName       = "file-aggregator-comma-separated.txt";
+  string datasetContext = "Dataset/Context/String";
 
-    // Create an aggregator.
-    Ptr<FileAggregator> aggregator =
-        CreateObject<FileAggregator>(fileName, FileAggregator::COMMA_SEPARATED);
+  // Create an aggregator.
+  Ptr<FileAggregator> aggregator =
+    CreateObject<FileAggregator> (fileName, FileAggregator::COMMA_SEPARATED);
 
-    // aggregator must be turned on
-    aggregator->Enable();
+  // aggregator must be turned on
+  aggregator->Enable ();
 
-    double time;
-    double value;
+  double time;
+  double value;
 
-    // Create the 2-D dataset.
-    for (time = -5.0; time <= +5.0; time += 1.0)
+  // Create the 2-D dataset.
+  for (time = -5.0; time <= +5.0; time += 1.0)
     {
-        // Calculate the 2-D curve
-        //
-        //                   2
-        //     value  =  time   .
-        //
-        value = time * time;
+      // Calculate the 2-D curve
+      //
+      //                   2
+      //     value  =  time   .
+      //
+      value = time * time;
 
-        // Add this point to the plot.
-        aggregator->Write2d(datasetContext, time, value);
+      // Add this point to the plot.
+      aggregator->Write2d (datasetContext, time, value);
     }
 
-    // Disable logging of data for the aggregator.
-    aggregator->Disable();
+  // Disable logging of data for the aggregator.
+  aggregator->Disable ();
 }
 
-/**
- * This function creates a file with 2 columns of values and separated
- * by commas.
- */
-void
-CreateSpaceSeparatedFile()
+
+//===========================================================================
+// Function: CreateSpaceSeparatedFile
+//
+//
+// This function creates a file with 2 columns of values and separated
+// by spaces.
+//===========================================================================
+
+void CreateSpaceSeparatedFile ()
 {
-    std::string fileName = "file-aggregator-space-separated.txt";
-    std::string datasetContext = "Dataset/Context/String";
+  using namespace std;
 
-    // Create an aggregator.  Note that the default type is space
-    // separated.
-    Ptr<FileAggregator> aggregator = CreateObject<FileAggregator>(fileName);
+  string fileName       = "file-aggregator-space-separated.txt";
+  string datasetContext = "Dataset/Context/String";
 
-    // aggregator must be turned on
-    aggregator->Enable();
+  // Create an aggregator.  Note that the default type is space
+  // separated.
+  Ptr<FileAggregator> aggregator =
+    CreateObject<FileAggregator> (fileName);
 
-    double time;
-    double value;
+  // aggregator must be turned on
+  aggregator->Enable ();
 
-    // Create the 2-D dataset.
-    for (time = -5.0; time <= +5.0; time += 1.0)
+  double time;
+  double value;
+
+  // Create the 2-D dataset.
+  for (time = -5.0; time <= +5.0; time += 1.0)
     {
-        // Calculate the 2-D curve
-        //
-        //                   2
-        //     value  =  time   .
-        //
-        value = time * time;
+      // Calculate the 2-D curve
+      //
+      //                   2
+      //     value  =  time   .
+      //
+      value = time * time;
 
-        // Add this point to the plot.
-        aggregator->Write2d(datasetContext, time, value);
+      // Add this point to the plot.
+      aggregator->Write2d (datasetContext, time, value);
     }
 
-    // Disable logging of data for the aggregator.
-    aggregator->Disable();
+  // Disable logging of data for the aggregator.
+  aggregator->Disable ();
 }
 
-/**
- * This function creates a file with formatted values.
- */
-void
-CreateFormattedFile()
+
+//===========================================================================
+// Function: CreateFormattedFile
+//
+//
+// This function creates a file with formatted values.
+//===========================================================================
+
+void CreateFormattedFile ()
 {
-    std::string fileName = "file-aggregator-formatted-values.txt";
-    std::string datasetContext = "Dataset/Context/String";
+  using namespace std;
 
-    // Create an aggregator that will have formatted values.
-    Ptr<FileAggregator> aggregator =
-        CreateObject<FileAggregator>(fileName, FileAggregator::FORMATTED);
+  string fileName       = "file-aggregator-formatted-values.txt";
+  string datasetContext = "Dataset/Context/String";
 
-    // Set the format for the values.
-    aggregator->Set2dFormat("Time = %.3e\tValue = %.0f");
+  // Create an aggregator that will have formatted values.
+  Ptr<FileAggregator> aggregator =
+    CreateObject<FileAggregator> (fileName, FileAggregator::FORMATTED);
 
-    // aggregator must be turned on
-    aggregator->Enable();
+  // Set the format for the values.
+  aggregator->Set2dFormat ("Time = %.3e\tValue = %.0f");
 
-    double time;
-    double value;
+  // aggregator must be turned on
+  aggregator->Enable ();
 
-    // Create the 2-D dataset.
-    for (time = -5.0; time < 5.5; time += 1.0)
+  double time;
+  double value;
+
+  // Create the 2-D dataset.
+  for (time = -5.0; time < 5.5; time += 1.0)
     {
-        // Calculate the 2-D curve
-        //
-        //                   2
-        //     value  =  time   .
-        //
-        value = time * time;
+      // Calculate the 2-D curve
+      //
+      //                   2
+      //     value  =  time   .
+      //
+      value = time * time;
 
-        // Add this point to the plot.
-        aggregator->Write2d(datasetContext, time, value);
+      // Add this point to the plot.
+      aggregator->Write2d (datasetContext, time, value);
     }
 
-    // Disable logging of data for the aggregator.
-    aggregator->Disable();
+  // Disable logging of data for the aggregator.
+  aggregator->Disable ();
 }
 
-} // unnamed namespace
 
-int
-main(int argc, char* argv[])
+}  // unnamed namespace
+
+
+int main (int argc, char *argv[])
 {
-    CreateCommaSeparatedFile();
-    CreateSpaceSeparatedFile();
-    CreateFormattedFile();
+  CreateCommaSeparatedFile ();
+  CreateSpaceSeparatedFile ();
+  CreateFormattedFile ();
 
-    return 0;
+  return 0;
 }

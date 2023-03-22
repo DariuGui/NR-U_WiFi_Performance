@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 Emmanuelle Laprise
  *
@@ -21,34 +22,33 @@
 
 #include "ns3/socket-factory.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 class Socket;
 
 /**
- * \ingroup socket
- *
+ * \ingroup socket 
+ * 
  * This can be used as an interface in a node in order for the node to
  * generate PacketSockets that can connect to net devices.
  */
 class PacketSocketFactory : public SocketFactory
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    PacketSocketFactory();
+  PacketSocketFactory ();
 
-    /**
-     * Creates a PacketSocket and returns a pointer to it.
-     *
-     * \return a pointer to the created socket
-     */
-    Ptr<Socket> CreateSocket() override;
+  /**
+   * Creates a PacketSocket and returns a pointer to it.
+   *
+   * \return a pointer to the created socket
+   */
+  virtual Ptr<Socket> CreateSocket (void);
 };
 
 } // namespace ns3

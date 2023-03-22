@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2008 University of Washington
  *
@@ -20,12 +21,13 @@
 
 #include <string>
 
-namespace ns3
-{
+namespace ns3 {
 
-std::string BufferToString(uint8_t* buffer, uint32_t len);
-bool StringToBuffer(std::string s, uint8_t* buffer, uint32_t* len);
+std::string BufferToString (uint8_t *buffer, uint32_t len);
+bool StringToBuffer (std::string s, uint8_t *buffer, uint32_t *len);
+
 
 } // namespace ns3
 
 #endif /* ENCODE_DECODE_H */
+

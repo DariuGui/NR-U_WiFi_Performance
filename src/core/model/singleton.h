@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 INRIA
  *
@@ -19,14 +20,16 @@
 #ifndef SINGLETON_H
 #define SINGLETON_H
 
+#include "non-copyable.h"
+
+
 /**
  * \file
  * \ingroup access
  * ns3::Singleton declaration and template implementation.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup access
@@ -57,51 +60,38 @@ namespace ns3
  * finalizer.
  */
 template <typename T>
-class Singleton
+class Singleton : private NonCopyable
 {
-  public:
-    // Delete copy constructor and assignment operator to avoid misuse
-    Singleton<T>(const Singleton<T>&) = delete;
-    Singleton<T>& operator=(const Singleton<T>&) = delete;
+public:
+  /**
+   * Get a pointer to the singleton instance.
+   *
+   * The instance will be automatically deleted when
+   * the process exits.
+   *
+   * \return A pointer to the singleton instance.
+   */
+  static T * Get (void);
 
-    /**
-     * Get a pointer to the singleton instance.
-     *
-     * The instance will be automatically deleted when
-     * the process exits.
-     *
-     * \return A pointer to the singleton instance.
-     */
-    static T* Get();
-
-  protected:
-    /** Constructor. */
-    Singleton<T>()
-    {
-    }
-
-    /** Destructor. */
-    virtual ~Singleton<T>()
-    {
-    }
 };
 
 } // namespace ns3
+
 
 /********************************************************************
  *  Implementation of the templates declared above.
  ********************************************************************/
 
-namespace ns3
-{
+namespace ns3 {
 
 template <typename T>
-T*
-Singleton<T>::Get()
+T *
+Singleton<T>::Get (void)
 {
-    static T object;
-    return &object;
+  static T object;
+  return &object;
 }
+
 
 } // namespace ns3
 

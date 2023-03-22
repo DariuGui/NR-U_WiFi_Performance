@@ -20,10 +20,14 @@
 #              LAN
 #
 # - UDP flows from n0 to n1 and back
-# - DropTail queues
+# - DropTail queues 
 # - Tracing of queues and packet receptions to file "udp-echo.tr"
 
-from ns import ns
+import ns.applications
+import ns.core
+import ns.csma
+import ns.internet
+import ns.network
 
 def main(argv):
   #
@@ -85,7 +89,7 @@ def main(argv):
   packetSize = 1024
   maxPacketCount = 500
   interPacketInterval = ns.core.Seconds(0.01)
-  client = ns.applications.UdpEchoClientHelper(i.GetAddress(1).ConvertTo(), port)
+  client = ns.applications.UdpEchoClientHelper(i.GetAddress (1), port)
   client.SetAttribute("MaxPackets", ns.core.UintegerValue(maxPacketCount))
   client.SetAttribute("Interval", ns.core.TimeValue(interPacketInterval))
   client.SetAttribute("PacketSize", ns.core.UintegerValue(packetSize))
@@ -101,7 +105,6 @@ def main(argv):
   # Now, do the actual simulation.
   #
   print ("Run Simulation.")
-  ns.core.Simulator.Stop(ns.Seconds(10))
   ns.core.Simulator.Run()
   ns.core.Simulator.Destroy()
   print ("Done.")

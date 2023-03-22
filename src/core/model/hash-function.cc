@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 Lawrence Livermore National Laboratory
  *
@@ -17,9 +18,8 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include "hash-function.h"
-
 #include "log.h"
+#include "hash-function.h"
 
 /**
  * \file
@@ -27,21 +27,20 @@
  * \brief ns3::Hash::Implementation::GetHash64 default implementation.
  */
 
-namespace ns3
-{
 
-NS_LOG_COMPONENT_DEFINE("HashFunction");
+namespace ns3 {
 
-namespace Hash
-{
+NS_LOG_COMPONENT_DEFINE ("HashFunction");
+
+namespace Hash {
 
 uint64_t
-Implementation::GetHash64(const char* buffer, const std::size_t size)
+Implementation::GetHash64  (const char * buffer, const std::size_t size)
 {
-    NS_LOG_WARN("64-bit hash requested, only 32-bit implementation available");
-    return GetHash32(buffer, size);
+  NS_LOG_WARN ("64-bit hash requested, only 32-bit implementation available");
+  return GetHash32 (buffer, size);
 }
 
-} // namespace Hash
+}  // namespace Hash
 
-} // namespace ns3
+}  // namespace ns3

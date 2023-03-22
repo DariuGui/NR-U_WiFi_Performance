@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Orange Labs
  *
@@ -29,8 +30,7 @@
  * Declaration of ns3::ErpOfdmPpdu class.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 class WifiPsdu;
 
@@ -43,32 +43,28 @@ class WifiPsdu;
  */
 class ErpOfdmPpdu : public OfdmPpdu
 {
-  public:
-    /**
-     * Create an ERP-OFDM PPDU.
-     *
-     * \param psdu the PHY payload (PSDU)
-     * \param txVector the TXVECTOR that was used for this PPDU
-     * \param txCenterFreq the center frequency (MHz) that was used for this PPDU
-     * \param band the WifiPhyBand used for the transmission of this PPDU
-     * \param uid the unique ID of this PPDU
-     */
-    ErpOfdmPpdu(Ptr<const WifiPsdu> psdu,
-                const WifiTxVector& txVector,
-                uint16_t txCenterFreq,
-                WifiPhyBand band,
-                uint64_t uid);
-    /**
-     * Destructor for ErpOfdmPpdu.
-     */
-    ~ErpOfdmPpdu() override;
+public:
+  /**
+   * Create an ERP-OFDM PPDU.
+   *
+   * \param psdu the PHY payload (PSDU)
+   * \param txVector the TXVECTOR that was used for this PPDU
+   * \param band the WifiPhyBand used for the transmission of this PPDU
+   * \param uid the unique ID of this PPDU
+   */
+  ErpOfdmPpdu (Ptr<const WifiPsdu> psdu, const WifiTxVector& txVector,
+               WifiPhyBand band, uint64_t uid);
+  /**
+   * Destructor for ErpOfdmPpdu.
+   */
+  virtual ~ErpOfdmPpdu ();
 
-    Ptr<WifiPpdu> Copy() const override;
+  Ptr<WifiPpdu> Copy (void) const override;
 
-  private:
-    WifiTxVector DoGetTxVector() const override;
-}; // class ErpOfdmPpdu
+private:
+  WifiTxVector DoGetTxVector (void) const override;
+}; //class ErpOfdmPpdu
 
-} // namespace ns3
+} //namespace ns3
 
 #endif /* ERP_OFDM_PPDU_H */

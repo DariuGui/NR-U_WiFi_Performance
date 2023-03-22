@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -17,9 +18,8 @@
 #ifndef BRIDGE_CHANNEL_H
 #define BRIDGE_CHANNEL_H
 
-#include "ns3/channel.h"
 #include "ns3/net-device.h"
-
+#include "ns3/channel.h"
 #include <vector>
 
 /**
@@ -28,12 +28,11 @@
  * ns3::BridgeChannel declaration.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup bridge
- *
+ * 
  * \brief Virtual channel implementation for bridges (BridgeNetDevice).
  *
  * Just like BridgeNetDevice aggregates multiple NetDevices,
@@ -42,31 +41,44 @@ namespace ns3
  */
 class BridgeChannel : public Channel
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    BridgeChannel();
-    ~BridgeChannel() override;
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  BridgeChannel ();
+  virtual ~BridgeChannel ();
 
-    // Delete copy constructor and assignment operator to avoid misuse
-    BridgeChannel(const BridgeChannel&) = delete;
-    BridgeChannel& operator=(const BridgeChannel&) = delete;
+  /**
+   * Adds a channel to the bridged pool
+   * \param bridgedChannel  the channel to add to the pool
+   */
+  void AddChannel (Ptr<Channel> bridgedChannel);
 
-    /**
-     * Adds a channel to the bridged pool
-     * \param bridgedChannel  the channel to add to the pool
-     */
-    void AddChannel(Ptr<Channel> bridgedChannel);
+  // virtual methods implementation, from Channel
+  virtual std::size_t GetNDevices (void) const;
+  virtual Ptr<NetDevice> GetDevice (std::size_t i) const;
 
-    // virtual methods implementation, from Channel
-    std::size_t GetNDevices() const override;
-    Ptr<NetDevice> GetDevice(std::size_t i) const override;
+private:
 
-  private:
-    std::vector<Ptr<Channel>> m_bridgedChannels; //!< pool of bridged channels
+  /**
+   * \brief Copy constructor
+   *
+   * Defined and unimplemented to avoid misuse
+   */
+  BridgeChannel (const BridgeChannel &);
+
+  /**
+   * \brief Copy constructor
+   *
+   * Defined and unimplemented to avoid misuse
+   * \returns
+   */
+  BridgeChannel &operator = (const BridgeChannel &);
+
+  std::vector< Ptr<Channel> > m_bridgedChannels; //!< pool of bridged channels
+
 };
 
 } // namespace ns3

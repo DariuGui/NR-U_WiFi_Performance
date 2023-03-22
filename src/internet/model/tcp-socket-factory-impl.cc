@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 Georgia Tech Research Corporation
  *
@@ -17,42 +18,38 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 #include "tcp-socket-factory-impl.h"
-
 #include "tcp-l4-protocol.h"
-
-#include "ns3/assert.h"
 #include "ns3/socket.h"
+#include "ns3/assert.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-TcpSocketFactoryImpl::TcpSocketFactoryImpl()
-    : m_tcp(nullptr)
+TcpSocketFactoryImpl::TcpSocketFactoryImpl ()
+  : m_tcp (0)
 {
 }
-
-TcpSocketFactoryImpl::~TcpSocketFactoryImpl()
+TcpSocketFactoryImpl::~TcpSocketFactoryImpl ()
 {
-    NS_ASSERT(!m_tcp);
+  NS_ASSERT (m_tcp == 0);
 }
 
 void
-TcpSocketFactoryImpl::SetTcp(Ptr<TcpL4Protocol> tcp)
+TcpSocketFactoryImpl::SetTcp (Ptr<TcpL4Protocol> tcp)
 {
-    m_tcp = tcp;
+  m_tcp = tcp;
 }
 
 Ptr<Socket>
-TcpSocketFactoryImpl::CreateSocket()
+TcpSocketFactoryImpl::CreateSocket (void)
 {
-    return m_tcp->CreateSocket();
+  return m_tcp->CreateSocket ();
 }
 
-void
-TcpSocketFactoryImpl::DoDispose()
+void 
+TcpSocketFactoryImpl::DoDispose (void)
 {
-    m_tcp = nullptr;
-    TcpSocketFactory::DoDispose();
+  m_tcp = 0;
+  TcpSocketFactory::DoDispose ();
 }
 
 } // namespace ns3

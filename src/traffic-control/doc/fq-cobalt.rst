@@ -62,10 +62,9 @@ For example, `FqCobalt` can be configured as follows:
 .. sourcecode:: cpp
 
   TrafficControlHelper tch;
-  tch.SetRootQueueDisc("ns3::FqCobaltQueueDisc",
-                        "DropBatchSize", UintegerValue(1),
-                       "Perturbation", UintegerValue(256));
-  QueueDiscContainer qdiscs = tch.Install(devices);
+  tch.SetRootQueueDisc ("ns3::FqCobaltQueueDisc", "DropBatchSize", UintegerValue (1)
+                                                 "Perturbation", UintegerValue (256));
+  QueueDiscContainer qdiscs = tch.Install (devices);
 
 Validation
 **********
@@ -75,10 +74,10 @@ The FqCobalt model is tested using :cpp:class:`FqCobaltQueueDiscTestSuite` class
 The tests are similar to the ones for FqCoDel queue disc mentioned in first section of this document.
 The test suite can be run using the following commands::
 
-  $ ./ns3 configure --enable-examples --enable-tests
-  $ ./ns3 build
+  $ ./waf configure --enable-examples --enable-tests
+  $ ./waf build
   $ ./test.py -s fq-cobalt-queue-disc
 
 or::
 
-  $ NS_LOG="FqCobaltQueueDisc" ./ns3 run "test-runner --suite=fq-cobalt-queue-disc"
+  $ NS_LOG="FqCobaltQueueDisc" ./waf --run "test-runner --suite=fq-cobalt-queue-disc"

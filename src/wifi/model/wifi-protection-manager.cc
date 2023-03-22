@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Universita' degli Studi di Napoli Federico II
  *
@@ -17,64 +18,45 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#include "wifi-protection-manager.h"
-
-#include "wifi-mac.h"
-
 #include "ns3/log.h"
+#include "wifi-protection-manager.h"
+#include "regular-wifi-mac.h"
 
-namespace ns3
-{
 
-NS_LOG_COMPONENT_DEFINE("WifiProtectionManager");
+namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED(WifiProtectionManager);
+NS_LOG_COMPONENT_DEFINE ("WifiProtectionManager");
+
+NS_OBJECT_ENSURE_REGISTERED (WifiProtectionManager);
 
 TypeId
-WifiProtectionManager::GetTypeId()
+WifiProtectionManager::GetTypeId (void)
 {
-    static TypeId tid =
-        TypeId("ns3::WifiProtectionManager").SetParent<Object>().SetGroupName("Wifi");
-    return tid;
+  static TypeId tid = TypeId ("ns3::WifiProtectionManager")
+    .SetParent<Object> ()
+    .SetGroupName ("Wifi")
+  ;
+  return tid;
 }
 
-WifiProtectionManager::WifiProtectionManager()
-    : m_linkId(0)
+WifiProtectionManager::~WifiProtectionManager ()
 {
-    NS_LOG_FUNCTION(this);
-}
-
-WifiProtectionManager::~WifiProtectionManager()
-{
-    NS_LOG_FUNCTION_NOARGS();
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 void
-WifiProtectionManager::DoDispose()
+WifiProtectionManager::DoDispose (void)
 {
-    NS_LOG_FUNCTION(this);
-    m_mac = nullptr;
-    Object::DoDispose();
+  NS_LOG_FUNCTION (this);
+  m_mac = 0;
+  Object::DoDispose ();
 }
 
 void
-WifiProtectionManager::SetWifiMac(Ptr<WifiMac> mac)
+WifiProtectionManager::SetWifiMac (Ptr<RegularWifiMac> mac)
 {
-    NS_LOG_FUNCTION(this << mac);
-    m_mac = mac;
+  NS_LOG_FUNCTION (this << mac);
+  m_mac = mac;
 }
 
-Ptr<WifiRemoteStationManager>
-WifiProtectionManager::GetWifiRemoteStationManager() const
-{
-    return m_mac->GetWifiRemoteStationManager(m_linkId);
-}
-
-void
-WifiProtectionManager::SetLinkId(uint8_t linkId)
-{
-    NS_LOG_FUNCTION(this << +linkId);
-    m_linkId = linkId;
-}
-
-} // namespace ns3
+} //namespace ns3

@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 Universita' degli Studi di Napoli Federico II
  *
@@ -22,8 +23,7 @@
 
 #include "ns3/ht-frame-exchange-manager.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup wifi
@@ -33,20 +33,19 @@ namespace ns3
  */
 class VhtFrameExchangeManager : public HtFrameExchangeManager
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    VhtFrameExchangeManager();
-    ~VhtFrameExchangeManager() override;
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  VhtFrameExchangeManager ();
+  virtual ~VhtFrameExchangeManager ();
 
-  protected:
-    Ptr<WifiPsdu> GetWifiPsdu(Ptr<WifiMpdu> mpdu, const WifiTxVector& txVector) const override;
-    uint32_t GetPsduSize(Ptr<const WifiMpdu> mpdu, const WifiTxVector& txVector) const override;
+protected:
+  Ptr<WifiPsdu> GetWifiPsdu (Ptr<WifiMacQueueItem> mpdu, const WifiTxVector& txVector) const override;
 };
 
-} // namespace ns3
+} //namespace ns3
 
 #endif /* VHT_FRAME_EXCHANGE_MANAGER_H */

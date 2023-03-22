@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 INESC Porto
  *
@@ -19,10 +20,9 @@
 #ifndef EVENT_GARBAGE_COLLECTOR_H
 #define EVENT_GARBAGE_COLLECTOR_H
 
+#include <set>
 #include "ns3/event-id.h"
 #include "ns3/simulator.h"
-
-#include <set>
 
 /**
  * \file
@@ -31,8 +31,7 @@
  * ns3::EventGarbageCollector declaration.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup events
@@ -46,50 +45,52 @@ namespace ns3
  */
 class EventGarbageCollector
 {
-  public:
-    EventGarbageCollector();
+public:
 
-    /**
-     * \brief Tracks a new event
-     * \param [in] event the Event to track
-     */
-    void Track(EventId event);
+  EventGarbageCollector ();
 
-    ~EventGarbageCollector();
+  /**
+   * \brief Tracks a new event
+   * \param [in] event the Event to track
+   */
+  void Track (EventId event);
 
-  private:
-    /** Event list container */
-    typedef std::multiset<EventId> EventList;
+  ~EventGarbageCollector ();
 
-    /** Initial threshold for cleaning the event list. */
-    const typename EventList::size_type CHUNK_INIT_SIZE = 8;
-    /**
-     * Threshold to switch from exponential to linear growth
-     * in the cleanup frequency.
-     */
-    const typename EventList::size_type CHUNK_MAX_SIZE = 128;
+private:
 
-    EventList::size_type m_nextCleanupSize; //!< Batch size for cleanup
-    EventList m_events;                     //!< The tracked event list
+  /** Event list container */
+  typedef std::multiset<EventId> EventList;
 
-    /**
-     * \brief Called when a new event was added and the cleanup limit was
-     * exceeded in consequence.
-     */
-    void Cleanup();
-    /**
-     * \brief Grow the cleanup limit.
-     * Increase the cleanup size by the smaller of
-     * the current cleanup size (exponential growth),
-     * or the CHUNK_MAX_SIZE (linear growth).
-     */
-    void Grow();
-    /**
-     * \brief Shrink the cleanup limit
-     * Reduce the cleanup size by factors of two until less than the
-     * current event list, then Grow one step.
-     */
-    void Shrink();
+  /** Initial threshold for cleaning the event list. */
+  const typename EventList::size_type CHUNK_INIT_SIZE = 8;
+  /**
+   * Threshold to switch from exponential to linear growth
+   * in the cleanup frequency.
+   */
+  const typename EventList::size_type CHUNK_MAX_SIZE = 128;
+  
+  EventList::size_type m_nextCleanupSize;      //!< Batch size for cleanup
+  EventList m_events;                          //!< The tracked event list 
+
+  /**
+   * \brief Called when a new event was added and the cleanup limit was
+   * exceeded in consequence.
+   */
+  void Cleanup ();
+  /**
+   * \brief Grow the cleanup limit.
+   * Increase the cleanup size by the smaller of
+   * the current cleanup size (exponential growth),
+   * or the CHUNK_MAX_SIZE (linear growth).
+   */
+  void Grow ();
+  /**
+   * \brief Shrink the cleanup limit
+   * Reduce the cleanup size by factors of two until less than the
+   * current event list, then Grow one step.
+   */
+  void Shrink ();
 };
 
 } // namespace ns3

@@ -1,3 +1,4 @@
+/* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011,2012 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *
@@ -17,17 +18,16 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
+
 #ifndef LTE_GLOBAL_PATHLOSS_DATABASE_H
 #define LTE_GLOBAL_PATHLOSS_DATABASE_H
 
 #include <ns3/log.h>
 #include <ns3/ptr.h>
-
-#include <map>
 #include <string>
+#include <map>
 
-namespace ns3
-{
+namespace ns3 {
 
 class SpectrumPhy;
 
@@ -36,49 +36,47 @@ class SpectrumPhy;
  *
  * Store the last pathloss value for each TX-RX pair. This is an
  * example of how the PathlossTrace (provided by some SpectrumChannel
- * implementations) work.
- *
+ * implementations) work. 
+ * 
  */
 class LteGlobalPathlossDatabase
 {
-  public:
-    virtual ~LteGlobalPathlossDatabase();
+public:
 
-    /**
-     * update the pathloss value
-     *
-     * \param context
-     * \param txPhy the transmitting PHY
-     * \param rxPhy the receiving PHY
-     * \param lossDb the loss in dB
-     */
-    virtual void UpdatePathloss(std::string context,
-                                Ptr<const SpectrumPhy> txPhy,
-                                Ptr<const SpectrumPhy> rxPhy,
-                                double lossDb) = 0;
+  virtual ~LteGlobalPathlossDatabase (void);
 
-    /**
-     *
-     *
-     * \param cellId the id of the eNB
-     * \param imsi the id of the UE
-     *
-     * \return the pathloss value between the UE and the eNB
-     */
-    double GetPathloss(uint16_t cellId, uint64_t imsi);
+  /** 
+   * update the pathloss value
+   * 
+   * \param context 
+   * \param txPhy the transmitting PHY
+   * \param rxPhy the receiving PHY
+   * \param lossDb the loss in dB
+   */
+  virtual void UpdatePathloss (std::string context, Ptr<const SpectrumPhy> txPhy, Ptr<const SpectrumPhy> rxPhy, double lossDb) = 0;
 
-    /**
-     * print the stored pathloss values to standard output
-     *
-     */
-    void Print();
+  /** 
+   * 
+   * 
+   * \param cellId the id of the eNB
+   * \param imsi the id of the UE
+   * 
+   * \return the pathloss value between the UE and the eNB
+   */
+  double GetPathloss (uint16_t cellId, uint64_t imsi);
 
-  protected:
-    /**
-     * List of the last pathloss value for each UE by CellId.
-     * ( CELL ID,  ( IMSI,PATHLOSS ))
-     */
-    std::map<uint16_t, std::map<uint64_t, double>> m_pathlossMap;
+  /** 
+   * print the stored pathloss values to standard output
+   * 
+   */
+  void Print ();
+
+protected:
+  /**
+   * List of the last pathloss value for each UE by CellId.
+   * ( CELL ID,  ( IMSI,PATHLOSS ))
+   */
+  std::map<uint16_t, std::map<uint64_t, double> > m_pathlossMap;
 };
 
 /**
@@ -87,12 +85,9 @@ class LteGlobalPathlossDatabase
  */
 class DownlinkLteGlobalPathlossDatabase : public LteGlobalPathlossDatabase
 {
-  public:
-    // inherited from LteGlobalPathlossDatabase
-    void UpdatePathloss(std::string context,
-                        Ptr<const SpectrumPhy> txPhy,
-                        Ptr<const SpectrumPhy> rxPhy,
-                        double lossDb) override;
+public:
+  // inherited from LteGlobalPathlossDatabase
+  virtual void UpdatePathloss (std::string context, Ptr<const SpectrumPhy> txPhy, Ptr<const SpectrumPhy> rxPhy, double lossDb);
 };
 
 /**
@@ -101,14 +96,15 @@ class DownlinkLteGlobalPathlossDatabase : public LteGlobalPathlossDatabase
  */
 class UplinkLteGlobalPathlossDatabase : public LteGlobalPathlossDatabase
 {
-  public:
-    // inherited from LteGlobalPathlossDatabase
-    void UpdatePathloss(std::string context,
-                        Ptr<const SpectrumPhy> txPhy,
-                        Ptr<const SpectrumPhy> rxPhy,
-                        double lossDb) override;
+public:
+  // inherited from LteGlobalPathlossDatabase
+  virtual void UpdatePathloss (std::string context, Ptr<const SpectrumPhy> txPhy, Ptr<const SpectrumPhy> rxPhy, double lossDb);
 };
 
+
 } // namespace ns3
+
+
+
 
 #endif // LTE_GLOBAL_PATHLOSS_DATABASE_H

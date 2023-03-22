@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2020 University of Padova, Dep. of Information Engineering, SIGNET lab.
  *
@@ -18,11 +19,11 @@
 #ifndef THREE_GPP_ANTENNA_MODEL_H
 #define THREE_GPP_ANTENNA_MODEL_H
 
-#include <ns3/antenna-model.h>
-#include <ns3/object.h>
 
-namespace ns3
-{
+#include <ns3/object.h>
+#include <ns3/antenna-model.h>
+
+namespace ns3 {
 
 /**
  *
@@ -33,59 +34,57 @@ namespace ns3
  */
 class ThreeGppAntennaModel : public AntennaModel
 {
-  public:
-    ThreeGppAntennaModel();
-    ~ThreeGppAntennaModel() override;
+public:
+  ThreeGppAntennaModel (void);
+  virtual ~ThreeGppAntennaModel (void) override;
 
-    /**
-     * \brief Get the type ID.
-     * \return The object TypeId.
-     */
-    static TypeId GetTypeId();
+  // inherited from Object
+  static TypeId GetTypeId ();
 
-    // inherited from AntennaModel
-    double GetGainDb(Angles a) override;
+  // inherited from AntennaModel
+  virtual double GetGainDb (Angles a) override;
 
-    /**
-     * Get the vertical beamwidth of the antenna element.
-     * \return the vertical beamwidth in degrees
-     */
-    double GetVerticalBeamwidth() const;
+  /**
+   * Get the vertical beamwidth of the antenna element.
+   * \return the vertical beamwidth in degrees
+   */
+  double GetVerticalBeamwidth () const;
 
-    /**
-     * Get the horizontal beamwidth of the antenna element.
-     * \return the horizontal beamwidth in degrees
-     */
-    double GetHorizontalBeamwidth() const;
+  /**
+   * Get the horizontal beamwidth of the antenna element.
+   * \return the horizontal beamwidth in degrees
+   */
+  double GetHorizontalBeamwidth () const;
 
-    /**
-     * Get the side-lobe attenuation in the vertical direction of the antenna element.
-     * \return side-lobe attenuation in the vertical direction in dB
-     */
-    double GetSlaV() const;
+  /**
+   * Get the side-lobe attenuation in the vertical direction of the antenna element.
+   * \return side-lobe attenuation in the vertical direction in dB
+   */
+  double GetSlaV () const;
 
-    /**
-     * Get the naximum attenuation of the antenna element.
-     * \return the naximum attenuation in dB
-     */
-    double GetMaxAttenuation() const;
+  /**
+   * Get the naximum attenuation of the antenna element.
+   * \return the naximum attenuation in dB
+   */
+  double GetMaxAttenuation () const;
 
-    /**
-     * Get the maximum directional gain of the antenna element.
-     * \return the maximum directional gain in dBi
-     */
-    double GetAntennaElementGain() const;
+  /**
+   * Get the maximum directional gain of the antenna element.
+   * \return the maximum directional gain in dBi
+   */
+  double GetAntennaElementGain () const;
 
-  private:
-    double m_verticalBeamwidthDegrees; //!< beamwidth in the vertical direction \f$(\theta_{3dB})\f$
-                                       //!< [deg]
-    double m_horizontalBeamwidthDegrees; //!< beamwidth in the horizontal direction
-                                         //!< \f$(\phi_{3dB})\f$ [deg]
-    double m_aMax;                       //!< maximum attenuation (A_{max}) [dB]
-    double m_slaV;  //!< side-lobe attenuation in the vertical direction (SLA_V) [dB]
-    double m_geMax; //!< maximum directional gain of the antenna element (G_{E,max}) [dBi]
+private:
+  double m_verticalBeamwidthDegrees;    //!< beamwidth in the vertical direction (\theta_{3dB}) [deg]
+  double m_horizontalBeamwidthDegrees;  //!< beamwidth in the horizontal direction (\phi_{3dB}) [deg]
+  double m_aMax;                        //!< maximum attenuation (A_{max}) [dB]
+  double m_slaV;                        //!< side-lobe attenuation in the vertical direction (SLA_V) [dB]
+  double m_geMax;                       //!< maximum directional gain of the antenna element (G_{E,max}) [dBi]
 };
 
+
+
 } // namespace ns3
+
 
 #endif // THREE_GPP_ANTENNA_MODEL_H

@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 Network Security Lab, University of Washington, Seattle.
  *
@@ -18,38 +19,39 @@
  */
 
 #include "device-energy-model.h"
-
 #include "ns3/log.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("DeviceEnergyModel");
+NS_LOG_COMPONENT_DEFINE ("DeviceEnergyModel");
 
-NS_OBJECT_ENSURE_REGISTERED(DeviceEnergyModel);
+NS_OBJECT_ENSURE_REGISTERED (DeviceEnergyModel);
 
 TypeId
-DeviceEnergyModel::GetTypeId()
+DeviceEnergyModel::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::DeviceEnergyModel").SetParent<Object>().SetGroupName("Energy");
-    return tid;
+  static TypeId tid = TypeId ("ns3::DeviceEnergyModel")
+    .SetParent<Object> ()
+    .SetGroupName ("Energy")
+  ;
+  return tid;
 }
 
-DeviceEnergyModel::DeviceEnergyModel()
+DeviceEnergyModel::DeviceEnergyModel ()
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
-DeviceEnergyModel::~DeviceEnergyModel()
+DeviceEnergyModel::~DeviceEnergyModel ()
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
 double
-DeviceEnergyModel::GetCurrentA() const
+DeviceEnergyModel::GetCurrentA (void) const
 {
-    NS_LOG_FUNCTION(this);
-    return DoGetCurrentA();
+  NS_LOG_FUNCTION (this);
+  return DoGetCurrentA ();
 }
 
 /*
@@ -57,10 +59,10 @@ DeviceEnergyModel::GetCurrentA() const
  */
 
 double
-DeviceEnergyModel::DoGetCurrentA() const
+DeviceEnergyModel::DoGetCurrentA (void) const
 {
-    NS_LOG_FUNCTION(this);
-    return 0.0;
+  NS_LOG_FUNCTION (this);
+  return 0.0;
 }
 
 } // namespace ns3

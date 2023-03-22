@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 Andrea Sacco
  *
@@ -24,8 +25,7 @@
 #include "ns3/nstime.h"
 #include "ns3/traced-value.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup energy
@@ -37,107 +37,102 @@ namespace ns3
  */
 class SimpleDeviceEnergyModel : public DeviceEnergyModel
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return The object TypeId.
-     */
-    static TypeId GetTypeId();
-    SimpleDeviceEnergyModel();
-    ~SimpleDeviceEnergyModel() override;
+public:
+  static TypeId GetTypeId (void);
+  SimpleDeviceEnergyModel ();
+  virtual ~SimpleDeviceEnergyModel ();
 
-    /**
-     * \brief Sets pointer to node.
-     *
-     * \param node Pointer to node.
-     *
-     * Implements DeviceEnergyModel::SetNode.
-     */
-    virtual void SetNode(Ptr<Node> node);
+  /**
+   * \brief Sets pointer to node.
+   *
+   * \param node Pointer to node.
+   *
+   * Implements DeviceEnergyModel::SetNode.
+   */
+  virtual void SetNode (Ptr<Node> node);
 
-    /**
-     * \brief Gets pointer to node.
-     *
-     * \returns Pointer to node.
-     *
-     * Implements DeviceEnergyModel::GetNode.
-     */
-    virtual Ptr<Node> GetNode() const;
+  /**
+   * \brief Gets pointer to node.
+   *
+   * \returns Pointer to node.
+   *
+   * Implements DeviceEnergyModel::GetNode.
+   */
+  virtual Ptr<Node> GetNode (void) const;
 
-    /**
-     * \brief Sets pointer to EnergySouce installed on node.
-     *
-     * \param source Pointer to EnergySource installed on node.
-     *
-     * Implements DeviceEnergyModel::SetEnergySource.
-     */
-    void SetEnergySource(Ptr<EnergySource> source) override;
+  /**
+   * \brief Sets pointer to EnergySouce installed on node.
+   *
+   * \param source Pointer to EnergySource installed on node.
+   *
+   * Implements DeviceEnergyModel::SetEnergySource.
+   */
+  virtual void SetEnergySource (Ptr<EnergySource> source);
 
-    /**
-     * \returns Total energy consumption of the vehicle.
-     *
-     * Implements DeviceEnergyModel::GetTotalEnergyConsumption.
-     */
-    double GetTotalEnergyConsumption() const override;
+  /**
+   * \returns Total energy consumption of the vehicle.
+   *
+   * Implements DeviceEnergyModel::GetTotalEnergyConsumption.
+   */
+  virtual double GetTotalEnergyConsumption (void) const;
 
-    /**
-     * \param newState New state the device is in.
-     *
-     * Not implemented
-     */
-    void ChangeState(int newState) override
-    {
-    }
+  /**
+   * \param newState New state the device is in.
+   *
+   * Not implemented
+   */
+  virtual void ChangeState (int newState)
+  {
+  }
 
-    /**
-     * \brief Handles energy depletion.
-     *
-     * Not implemented
-     */
-    void HandleEnergyDepletion() override
-    {
-    }
+  /**
+   * \brief Handles energy depletion.
+   *
+   * Not implemented
+   */
+  virtual void HandleEnergyDepletion (void)
+  {
+  }
 
-    /**
-     * \brief Handles energy recharged.
-     *
-     * Not implemented
-     */
-    void HandleEnergyRecharged() override
-    {
-    }
+  /**
+   * \brief Handles energy recharged.
+   *
+   * Not implemented
+   */
+  virtual void HandleEnergyRecharged (void)
+  {
+  }
 
-    /**
-     * \brief Handles energy changed.
-     *
-     * Not implemented
-     */
-    void HandleEnergyChanged() override
-    {
-    }
+  /**
+   * \brief Handles energy changed.
+   *
+   * Not implemented
+   */
+  virtual void HandleEnergyChanged (void)
+  {
+  }
 
-    /**
-     * \param current the current draw of device.
-     *
-     * Set the actual current draw of the device.
-     */
-    void SetCurrentA(double current);
+  /**
+   * \param current the current draw of device.
+   *
+   * Set the actual current draw of the device.
+   */
+  void SetCurrentA (double current);
+private:
+  void DoDispose (void);
 
-  private:
-    void DoDispose() override;
+  /**
+   * \returns Current draw of device, at current state.
+   *
+   * Implements DeviceEnergyModel::GetCurrentA.
+   */
+  virtual double DoGetCurrentA (void) const;
 
-    /**
-     * \returns Current draw of device, at current state.
-     *
-     * Implements DeviceEnergyModel::GetCurrentA.
-     */
-    double DoGetCurrentA() const override;
-
-    Time m_lastUpdateTime;                        //!< Last update time
-    double m_actualCurrentA;                      //!< actual curred (in Ampere)
-    Ptr<EnergySource> m_source;                   //!< Energy source
-    Ptr<Node> m_node;                             //!< Node
-    TracedValue<double> m_totalEnergyConsumption; //!< Total energy consumption trace
+  Time m_lastUpdateTime;
+  double m_actualCurrentA;
+  Ptr<EnergySource> m_source;
+  Ptr<Node> m_node;
+  TracedValue<double> m_totalEnergyConsumption;
 };
 
 } // namespace ns3

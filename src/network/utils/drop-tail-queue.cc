@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 University of Washington
  *
@@ -17,12 +18,11 @@
 
 #include "drop-tail-queue.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("DropTailQueue");
+NS_LOG_COMPONENT_DEFINE ("DropTailQueue");
 
-NS_OBJECT_TEMPLATE_CLASS_DEFINE(DropTailQueue, Packet);
-NS_OBJECT_TEMPLATE_CLASS_DEFINE(DropTailQueue, QueueDiscItem);
+NS_OBJECT_TEMPLATE_CLASS_DEFINE (DropTailQueue,Packet);
+NS_OBJECT_TEMPLATE_CLASS_DEFINE (DropTailQueue,QueueDiscItem);
 
 } // namespace ns3

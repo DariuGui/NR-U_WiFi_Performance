@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2005 INRIA
  *
@@ -18,7 +19,6 @@
  */
 
 #include "event-impl.h"
-
 #include "log.h"
 
 /**
@@ -27,44 +27,43 @@
  * ns3::EventImpl definitions.
  */
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("EventImpl");
+NS_LOG_COMPONENT_DEFINE ("EventImpl");
 
-EventImpl::~EventImpl()
+EventImpl::~EventImpl ()
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
-EventImpl::EventImpl()
-    : m_cancel(false)
+EventImpl::EventImpl ()
+  : m_cancel (false)
 {
-    NS_LOG_FUNCTION(this);
+  NS_LOG_FUNCTION (this);
 }
 
 void
-EventImpl::Invoke()
+EventImpl::Invoke (void)
 {
-    NS_LOG_FUNCTION(this);
-    if (!m_cancel)
+  NS_LOG_FUNCTION (this);
+  if (!m_cancel)
     {
-        Notify();
+      Notify ();
     }
 }
 
 void
-EventImpl::Cancel()
+EventImpl::Cancel (void)
 {
-    NS_LOG_FUNCTION(this);
-    m_cancel = true;
+  NS_LOG_FUNCTION (this);
+  m_cancel = true;
 }
 
 bool
-EventImpl::IsCancelled()
+EventImpl::IsCancelled (void)
 {
-    NS_LOG_FUNCTION(this);
-    return m_cancel;
+  NS_LOG_FUNCTION (this);
+  return m_cancel;
 }
 
 } // namespace ns3

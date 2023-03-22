@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2014 Universita' degli Studi di Napoli "Federico II"
  *
@@ -22,8 +23,7 @@
 
 #include "ns3/object.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup energy
@@ -33,21 +33,21 @@ namespace ns3
  */
 class WifiTxCurrentModel : public Object
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    WifiTxCurrentModel();
-    ~WifiTxCurrentModel() override;
+  WifiTxCurrentModel ();
+  virtual ~WifiTxCurrentModel ();
 
-    /**
-     * \param txPowerDbm the nominal TX power in dBm
-     * \returns the transmit current (in Ampere)
-     */
-    virtual double CalcTxCurrent(double txPowerDbm) const = 0;
+  /**
+   * \param txPowerDbm the nominal TX power in dBm
+   * \returns the transmit current (in Ampere)
+   */
+  virtual double CalcTxCurrent (double txPowerDbm) const = 0;
 };
 
 /**
@@ -83,22 +83,23 @@ class WifiTxCurrentModel : public Object
  */
 class LinearWifiTxCurrentModel : public WifiTxCurrentModel
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    LinearWifiTxCurrentModel();
-    ~LinearWifiTxCurrentModel() override;
+  LinearWifiTxCurrentModel ();
+  virtual ~LinearWifiTxCurrentModel ();
 
-    double CalcTxCurrent(double txPowerDbm) const override;
+  double CalcTxCurrent (double txPowerDbm) const;
 
-  private:
-    double m_eta;         ///< ETA
-    double m_voltage;     ///< voltage in Volts
-    double m_idleCurrent; ///< idle current in Amperes
+
+private:
+  double m_eta; ///< ETA
+  double m_voltage; ///< voltage in Volts
+  double m_idleCurrent; ///< idle current in Amperes
 };
 
 } // namespace ns3

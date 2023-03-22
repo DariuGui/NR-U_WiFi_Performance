@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 INRIA
  *
@@ -20,12 +21,10 @@
 #ifndef CONFIG_STORE_H
 #define CONFIG_STORE_H
 
+#include "ns3/object-base.h"
 #include "file-config.h"
 
-#include "ns3/object-base.h"
-
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \defgroup configstore Configuration Store/Load
@@ -40,7 +39,7 @@ namespace ns3
  * While it is possible to generate a sample config file and lightly
  * edit it to change a couple of values, there are cases where this
  * process will not work because the same value on the same object
- * can appear multiple times in the same automatically-generated
+ * can appear multiple times in the same automatically-generated 
  * configuration file under different configuration paths.
  *
  * As such, the best way to use this class is to use it to generate
@@ -48,7 +47,7 @@ namespace ns3
  * file only the strictly necessary elements, and move these minimal
  * elements to a new configuration file which can then safely
  * be edited. Another option is to use the ns3::GtkConfigStore class
- * which will allow you to edit the parameters and will generate
+ * which will allow you to edit the parameters and will generate 
  * configuration files where all the instances of the same parameter
  * are changed.
  */
@@ -59,75 +58,72 @@ namespace ns3
  */
 class ConfigStore : public ObjectBase
 {
-  public:
-    /**
-     * \enum Mode for ConfigStore operation
-     * \brief store / load mode
-     */
-    enum Mode
-    {
-        LOAD,
-        SAVE,
-        NONE
-    };
+public:
+/**
+ * \enum Mode for ConfigStore operation
+ * \brief store / load mode
+ */
+  enum Mode {
+    LOAD,
+    SAVE,
+    NONE
+  };
+/**
+ * \enum FileFormat for ConfigStore operation
+ * \brief file format
+ */
+  /// store format
+  enum FileFormat {
+    XML,
+    RAW_TEXT
+  };
 
-    /**
-     * \enum FileFormat for ConfigStore operation
-     * \brief file format
-     */
-    /// store format
-    enum FileFormat
-    {
-        XML,
-        RAW_TEXT
-    };
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
 
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    TypeId GetInstanceTypeId() const override;
+  ConfigStore ();
+  ~ConfigStore ();
 
-    ConfigStore();
-    ~ConfigStore() override;
+  /**
+   * Set the mode of operation
+   * \param mode mode of operation
+   */
+  void SetMode (enum Mode mode);
+  /**
+   * Set the file format
+   * \param format the file format
+   */
+  void SetFileFormat (enum FileFormat format);
+  /**
+   * Set the filename
+   * \param filename the file name
+   */
+  void SetFilename (std::string filename);
+  /**
+   * Set if to save deprecated attributes
+   * \param saveDeprecated the deprecated attributes save policy
+   */
+  void SetSaveDeprecated (bool saveDeprecated);
 
-    /**
-     * Set the mode of operation
-     * \param mode mode of operation
-     */
-    void SetMode(Mode mode);
-    /**
-     * Set the file format
-     * \param format the file format
-     */
-    void SetFileFormat(FileFormat format);
-    /**
-     * Set the filename
-     * \param filename the file name
-     */
-    void SetFilename(std::string filename);
-    /**
-     * Set if to save deprecated attributes
-     * \param saveDeprecated the deprecated attributes save policy
-     */
-    void SetSaveDeprecated(bool saveDeprecated);
+  /**
+   * Configure the default values
+   */
+  void ConfigureDefaults (void);
+  /**
+   * Configure the attribute values
+   */
+  void ConfigureAttributes (void);
 
-    /**
-     * Configure the default values
-     */
-    void ConfigureDefaults();
-    /**
-     * Configure the attribute values
-     */
-    void ConfigureAttributes();
-
-  private:
-    Mode m_mode;             ///< store mode
-    FileFormat m_fileFormat; ///< store format
-    bool m_saveDeprecated;   ///< save deprecated attributes
-    std::string m_filename;  ///< store file name
-    FileConfig* m_file;      ///< configuration file
+private:
+  enum Mode m_mode; ///< store mode
+  enum FileFormat m_fileFormat; ///< store format
+  bool m_saveDeprecated; ///< save deprecated attributes
+  std::string m_filename; ///< store file name
+  FileConfig *m_file; ///< configuration file
 };
 
 /**
@@ -137,7 +133,7 @@ class ConfigStore : public ObjectBase
  * \param [in] mode The configStore mode.
  * \returns The reference to the output stream.
  */
-std::ostream& operator<<(std::ostream& os, ConfigStore::Mode& mode);
+std::ostream & operator << (std::ostream & os, ConfigStore::Mode & mode);
 /**
  * \brief Stream insertion operator.
  *
@@ -145,8 +141,8 @@ std::ostream& operator<<(std::ostream& os, ConfigStore::Mode& mode);
  * \param [in] format The configStore file format.
  * \returns The reference to the output stream.
  */
-std::ostream& operator<<(std::ostream& os, ConfigStore::FileFormat& format);
+std::ostream & operator << (std::ostream & os, ConfigStore::FileFormat & format);
 
-} // namespace ns3
+}  // namespace ns3
 
 #endif /* CONFIG_STORE_H */

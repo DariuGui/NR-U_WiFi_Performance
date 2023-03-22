@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007, 2014 University of Washington
  *               2015 Universita' degli Studi di Napoli Federico II
@@ -24,8 +25,7 @@
 
 #include "ns3/queue-disc.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup traffic-control
@@ -46,39 +46,37 @@ namespace ns3
  * three, operate in packet mode and each have a capacity not less
  * than limit. No packet filter can be provided.
  */
-class PfifoFastQueueDisc : public QueueDisc
-{
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
-    /**
-     * \brief PfifoFastQueueDisc constructor
-     *
-     * Creates a queue with a depth of 1000 packets per band by default
-     */
-    PfifoFastQueueDisc();
+class PfifoFastQueueDisc : public QueueDisc {
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+  /**
+   * \brief PfifoFastQueueDisc constructor
+   *
+   * Creates a queue with a depth of 1000 packets per band by default
+   */
+  PfifoFastQueueDisc ();
 
-    ~PfifoFastQueueDisc() override;
+  virtual ~PfifoFastQueueDisc();
 
-    // Reasons for dropping packets
-    static constexpr const char* LIMIT_EXCEEDED_DROP =
-        "Queue disc limit exceeded"; //!< Packet dropped due to queue disc limit exceeded
+  // Reasons for dropping packets
+  static constexpr const char* LIMIT_EXCEEDED_DROP = "Queue disc limit exceeded";  //!< Packet dropped due to queue disc limit exceeded
 
-  private:
-    /**
-     * Priority to band map. Values are taken from the prio2band array used by
-     * the Linux pfifo_fast queue disc.
-     */
-    static const uint32_t prio2band[16];
+private:
+  /**
+   * Priority to band map. Values are taken from the prio2band array used by
+   * the Linux pfifo_fast queue disc.
+   */
+  static const uint32_t prio2band[16];
 
-    bool DoEnqueue(Ptr<QueueDiscItem> item) override;
-    Ptr<QueueDiscItem> DoDequeue() override;
-    Ptr<const QueueDiscItem> DoPeek() override;
-    bool CheckConfig() override;
-    void InitializeParams() override;
+  virtual bool DoEnqueue (Ptr<QueueDiscItem> item);
+  virtual Ptr<QueueDiscItem> DoDequeue (void);
+  virtual Ptr<const QueueDiscItem> DoPeek (void);
+  virtual bool CheckConfig (void);
+  virtual void InitializeParams (void);
 };
 
 } // namespace ns3

@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2014 Natale Patriciello, <natale.patriciello@gmail.com>
  *
@@ -21,8 +22,7 @@
 
 #include "tcp-congestion-ops.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 class TcpSocketState;
 
@@ -48,54 +48,55 @@ class TcpSocketState;
  */
 class TcpHighSpeed : public TcpNewReno
 {
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    /**
-     * Create an unbound tcp socket.
-     */
-    TcpHighSpeed();
+  /**
+   * Create an unbound tcp socket.
+   */
+  TcpHighSpeed (void);
 
-    /**
-     * \brief Copy constructor
-     * \param sock the object to copy
-     */
-    TcpHighSpeed(const TcpHighSpeed& sock);
-    ~TcpHighSpeed() override;
+  /**
+   * \brief Copy constructor
+   * \param sock the object to copy
+   */
+  TcpHighSpeed (const TcpHighSpeed& sock);
+  virtual ~TcpHighSpeed (void);
 
-    std::string GetName() const override;
+  virtual std::string GetName () const;
 
-    uint32_t GetSsThresh(Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight) override;
+  virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb,
+                                uint32_t bytesInFlight);
 
-    Ptr<TcpCongestionOps> Fork() override;
+  virtual Ptr<TcpCongestionOps> Fork ();
 
-    /**
-     * \brief Lookup table for the coefficient a (from RFC 3649)
-     *
-     * \param w Window value (in packets)
-     *
-     * \return the coefficient a
-     */
-    static uint32_t TableLookupA(uint32_t w);
+  /**
+   * \brief Lookup table for the coefficient a (from RFC 3649)
+   *
+   * \param w Window value (in packets)
+   *
+   * \return the coefficient a
+   */
+  static uint32_t  TableLookupA (uint32_t w);
 
-    /**
-     * \brief Lookup table for the coefficient b (from RFC 3649)
-     *
-     * \param w Window value (in packets)
-     *
-     * \return the coefficient b
-     */
-    static double TableLookupB(uint32_t w);
+  /**
+   * \brief Lookup table for the coefficient b (from RFC 3649)
+   *
+   * \param w Window value (in packets)
+   *
+   * \return the coefficient b
+   */
+  static double    TableLookupB (uint32_t w);
 
-  protected:
-    void CongestionAvoidance(Ptr<TcpSocketState> tcb, uint32_t segmentsAcked) override;
+protected:
+  virtual void CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
 
-  private:
-    uint32_t m_ackCnt; //!< Number of received ACK, corrected with the coefficient a
+private:
+  uint32_t m_ackCnt; //!< Number of received ACK, corrected with the coefficient a
 };
 
 } // namespace ns3

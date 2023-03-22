@@ -17,10 +17,10 @@ in your ``main()`` program or by the use of the ``NS_LOG`` environment variable.
 Logging statements are not compiled into optimized builds of |ns3|.  To use
 logging, one must build the (default) debug build of |ns3|.
 
-The project makes no guarantee about whether logging output will remain
+The project makes no guarantee about whether logging output will remain 
 the same over time.  Users are cautioned against building simulation output
 frameworks on top of logging code, as the output and the way the output
-is enabled may change over time.
+is enabled may change over time. 
 
 Overview
 ********
@@ -31,9 +31,9 @@ use of a particular function.
 
 For example, this code snippet is from ``Ipv4L3Protocol::IsDestinationAddress()``::
 
-  if (address == iaddr.GetBroadcast())
+  if (address == iaddr.GetBroadcast ())
     {
-      NS_LOG_LOGIC("For me (interface broadcast address)");
+      NS_LOG_LOGIC ("For me (interface broadcast address)");
       return true;
      }
 
@@ -49,7 +49,7 @@ first is by setting the ``NS_LOG`` environment variable; e.g.:
 
 .. sourcecode:: bash
 
-   $ NS_LOG="*" ./ns3 run first
+   $ NS_LOG="*" ./waf --run first
 
 will run the ``first`` tutorial program with all logging output.  (The
 specifics of the ``NS_LOG`` format will be discussed below.)
@@ -58,18 +58,18 @@ This can be made more granular by selecting individual components:
 
 .. sourcecode:: bash
 
-   $ NS_LOG="Ipv4L3Protocol" ./ns3 run first
+   $ NS_LOG="Ipv4L3Protocol" ./waf --run first
 
 The output can be further tailored with prefix options.
-
+  
 The second way to enable logging is to use explicit statements in your
 program, such as in the ``first`` tutorial program::
-
+   
    int
-   main(int argc, char *argv[])
+   main (int argc, char *argv[])
    {
-     LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
-     LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+     LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
+     LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
      ...
 
 (The meaning of ``LOG_LEVEL_INFO``, and other possible values,
@@ -107,7 +107,7 @@ in a module, spanning different compilation units, but logically grouped
 together, such as the |ns3| wifi code::
 
    WifiHelper wifiHelper;
-   wifiHelper.EnableLogComponents();
+   wifiHelper.EnableLogComponents (); 
 
 The ``NS_LOG`` log component wildcard \`*' will enable all components.
 
@@ -115,7 +115,7 @@ To see what log components are defined, any of these will work:
 
 .. sourcecode:: bash
 
-   $ NS_LOG="print-list" ./ns3 run ...
+   $ NS_LOG="print-list" ./waf --run ...
 
    $ NS_LOG="foo"  # a token not matching any log-component
 
@@ -253,7 +253,7 @@ class (``|prefix_level``).
 
 .. sourcecode:: bash
 
-   $ NS_LOG="*=all|prefix_level" ./ns3 run scratch-simulator
+   $ NS_LOG="*=all|prefix_level" ./waf --run scratch-simulator
    Scratch Simulator
    [ERROR] error message
    [WARN] warn message
@@ -306,10 +306,10 @@ for all log components.  These are all equivalent:
 
 .. sourcecode:: bash
 
-   $ NS_LOG="***" ...      $ NS_LOG="*=all|*" ...        $ NS_LOG="*=*|all" ...
+   $ NS_LOG="***" ...      $ NS_LOG="*=all|*" ...        $ NS_LOG="*=*|all" ...	      
    $ NS_LOG="*=**" ...     $ NS_LOG="*=level_all|*" ...  $ NS_LOG="*=*|prefix_all" ...
    $ NS_LOG="*=*|*" ...
-
+                       
 Be advised:  even the trivial ``scratch-simulator`` produces over
 46K lines of output with ``NS_LOG="***"``!
 
@@ -319,7 +319,7 @@ How to add logging to your code
 
 Adding logging to your code is very simple:
 
-1. Invoke the ``NS_LOG_COMPONENT_DEFINE(...);`` macro
+1. Invoke the ``NS_LOG_COMPONENT_DEFINE (...);`` macro
    inside of ``namespace ns3``.
 
   Create a unique string identifier (usually based on the name of the file
@@ -329,8 +329,8 @@ Adding logging to your code is very simple:
   ::
 
     namespace ns3 {
-
-    NS_LOG_COMPONENT_DEFINE("Ipv4L3Protocol");
+    
+    NS_LOG_COMPONENT_DEFINE ("Ipv4L3Protocol");
     ...
 
   This registers ``Ipv4L3Protocol`` as a log component.
@@ -355,21 +355,21 @@ In case you want to add logging statements to the methods of your template class
     {
     ...
     private:
-      std::list<Ptr<Item>> m_packets;           //!< the items in the queue
+      std::list<Ptr<Item> > m_packets;          //!< the items in the queue
       NS_LOG_TEMPLATE_DECLARE;                  //!< the log component
     };
 
   This requires you to perform these steps for all the subclasses of your class.
 
-2. Invoke the ``NS_LOG_TEMPLATE_DEFINE(...);`` macro in the constructor of
+2. Invoke the ``NS_LOG_TEMPLATE_DEFINE (...);`` macro in the constructor of
    your class by providing the name of a log component registered by calling
-   the ``NS_LOG_COMPONENT_DEFINE(...);`` macro in some module. For instance:
+   the ``NS_LOG_COMPONENT_DEFINE (...);`` macro in some module. For instance:
 
   ::
 
     template <typename Item>
-    Queue<Item>::Queue()
-      : NS_LOG_TEMPLATE_DEFINE("Queue")
+    Queue<Item>::Queue ()
+      : NS_LOG_TEMPLATE_DEFINE ("Queue")
     {
     }
 
@@ -380,18 +380,18 @@ In case you want to add logging statements to a static member template
 
 1. Invoke the ``NS_LOG_STATIC_TEMPLATE_DEFINE (...);`` macro in your static
    method by providing the name of a log component registered by calling
-   the ``NS_LOG_COMPONENT_DEFINE(...);`` macro in some module. For instance:
+   the ``NS_LOG_COMPONENT_DEFINE (...);`` macro in some module. For instance:
 
   ::
 
     template <typename Item>
     void
-    NetDeviceQueue::PacketEnqueued(Ptr<Queue<Item>> queue,
-                                   Ptr<NetDeviceQueueInterface> ndqi,
-                                   uint8_t txq, Ptr<const Item> item)
+    NetDeviceQueue::PacketEnqueued (Ptr<Queue<Item> > queue,
+                                    Ptr<NetDeviceQueueInterface> ndqi,
+                                    uint8_t txq, Ptr<const Item> item)
     {
 
-      NS_LOG_STATIC_TEMPLATE_DEFINE("NetDeviceQueueInterface");
+      NS_LOG_STATIC_TEMPLATE_DEFINE ("NetDeviceQueueInterface");
     ...
 
 2. Add logging statements (macro calls) to your static method.
@@ -400,8 +400,8 @@ Controlling timestamp precision
 *******************************
 
 Timestamps are printed out in units of seconds.  When used with the default
-|ns3| time resolution of nanoseconds, the default timestamp precision is 9
-digits, with fixed format, to allow for 9 digits to be consistently printed
+|ns3| time resolution of nanoseconds, the default timestamp precision is 9 
+digits, with fixed format, to allow for 9 digits to be consistently printed 
 to the right of the decimal point.  Example:
 
 ::
@@ -417,11 +417,11 @@ or femtoseconds, the precision is expanded accordingly; e.g. for picosecond:
 
 When the |ns3| simulation uses a time resolution lower than microseconds,
 the default C++ precision is used.
-
+ 
 An example program at ``src\core\examples\sample-log-time-format.cc``
 demonstrates how to change the timestamp formatting.
 
-The maximum useful precision is 20 decimal digits, since Time is signed 64
+The maximum useful precision is 20 decimal digits, since Time is signed 64 
 bits.
 
 Logging Macros
@@ -433,24 +433,24 @@ Logging Macros
   Severity Class    Macro
   ================  ==========================
   ``LOG_NONE``      (none needed)
-  ``LOG_ERROR``     ``NS_LOG_ERROR(...);``
-  ``LOG_WARN``      ``NS_LOG_WARN(...);``
-  ``LOG_DEBUG``     ``NS_LOG_DEBUG(...);``
-  ``LOG_INFO``      ``NS_LOG_INFO(...);``
-  ``LOG_FUNCTION``  ``NS_LOG_FUNCTION(...);``
-  ``LOG_LOGIC``     ``NS_LOG_LOGIC(...);``
+  ``LOG_ERROR``     ``NS_LOG_ERROR (...);``
+  ``LOG_WARN``      ``NS_LOG_WARN (...);``
+  ``LOG_DEBUG``     ``NS_LOG_DEBUG (...);``
+  ``LOG_INFO``      ``NS_LOG_INFO (...);``
+  ``LOG_FUNCTION``  ``NS_LOG_FUNCTION (...);``
+  ``LOG_LOGIC``     ``NS_LOG_LOGIC (...);``
   ================  ==========================
 
   The macros function as output streamers, so anything you can send to
   ``std::cout``, joined by ``<<`` operators, is allowed::
 
-    void MyClass::Check(int value, char * item)
+    void MyClass::Check (int value, char * item)
     {
-      NS_LOG_FUNCTION(this << arg << item);
+      NS_LOG_FUNCTION (this << arg << item);
       if (arg > 10)
         {
-          NS_LOG_ERROR("encountered bad value " << value <<
-                       " while checking " << name << "!");
+          NS_LOG_ERROR ("encountered bad value " << value <<
+                        " while checking " << name << "!");
         }
       ...
     }
@@ -463,7 +463,7 @@ Logging Macros
 Unconditional Logging
 =====================
 
-As a convenience, the ``NS_LOG_UNCOND(...);`` macro will always log its
+As a convenience, the ``NS_LOG_UNCOND (...);`` macro will always log its
 arguments, even if the associated log-component is not enabled at any
 severity.  This macro does not use any of the prefix options.  Note that
 logging is only enabled in debug builds; this macro won't produce
@@ -473,19 +473,19 @@ output in optimized builds.
 Guidelines
 ==========
 
-* Start every class method with ``NS_LOG_FUNCTION(this << args...);``
+* Start every class method with ``NS_LOG_FUNCTION (this << args...);``
   This enables easy function call tracing.
 
-  * Except:  don't log operators or explicit copy constructors,
+  * Except:  don't log operators or explicit copy constructors, 
     since these will cause infinite recursion and stack overflow.
 
   * For methods without arguments use the same form:
-    ``NS_LOG_FUNCTION(this);``
+    ``NS_LOG_FUNCTION (this);``
 
   * For static functions:
 
-    * With arguments use ``NS_LOG_FUNCTION(...);`` as normal.
-    * Without arguments use ``NS_LOG_FUNCTION_NOARGS();``
+    * With arguments use ``NS_LOG_FUNCTION (...);`` as normal.
+    * Without arguments use ``NS_LOG_FUNCTION_NOARGS ();``
 
 * Use ``NS_LOG_ERROR`` for serious error conditions that probably
   invalidate the simulation execution.
@@ -502,12 +502,15 @@ Guidelines
 
 * Use ``NS_LOG_LOGIC`` to trace important logic branches within a function.
 
-* Test that your logging changes do not break the code.
-  Run some example programs with all log components turned on (e.g.
+* Test that your logging changes do not break the code.  
+  Run some example programs with all log components turned on (e.g. 
   ``NS_LOG="***"``).
 
-* Use an explicit cast for any variable of type uint8_t or int8_t,
-  e.g., ``NS_LOG_LOGIC("Variable i is " << static_cast<int>(i));``.
+* Use an explicit cast for any variable of type uint8_t or int8_t, 
+  e.g., ``NS_LOG_LOGIC ("Variable i is " << static_cast<int> (i));``.
   Without the cast, the integer is interpreted as a char, and the result
   will be most likely not in line with the expectations.
   This is a well documented C++ 'feature'.
+
+
+

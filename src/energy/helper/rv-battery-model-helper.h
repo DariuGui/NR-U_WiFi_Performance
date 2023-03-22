@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 Network Security Lab, University of Washington, Seattle.
  *
@@ -21,11 +22,9 @@
 #define RV_BATTERY_MODEL_HELPER_H
 
 #include "energy-model-helper.h"
-
 #include "ns3/node.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup energy
@@ -34,19 +33,20 @@ namespace ns3
  */
 class RvBatteryModelHelper : public EnergySourceHelper
 {
-  public:
-    RvBatteryModelHelper();
-    ~RvBatteryModelHelper() override;
+public:
+  RvBatteryModelHelper ();
+  ~RvBatteryModelHelper ();
 
-    void Set(std::string name, const AttributeValue& v) override;
+  void Set (std::string name, const AttributeValue &v);
 
-  private:
-    Ptr<EnergySource> DoInstall(Ptr<Node> node) const override;
+private:
+  virtual Ptr<EnergySource> DoInstall (Ptr<Node> node) const;
 
-  private:
-    ObjectFactory m_rvBatteryModel; //!< RV Battery factory
+private:
+  ObjectFactory m_rvBatteryModel;
+
 };
 
 } // namespace ns3
 
-#endif /* RV_BATTERY_MODEL_HELPER_H */
+#endif  /* RV_BATTERY_MODEL_HELPER_H */

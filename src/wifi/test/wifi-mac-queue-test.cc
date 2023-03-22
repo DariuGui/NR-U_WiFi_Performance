@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2021 IITP RAS
  *
@@ -17,10 +18,9 @@
  * Author: Alexander Krotov <krotov@iitp.ru>
  */
 
-#include "ns3/fcfs-wifi-queue-scheduler.h"
-#include "ns3/simulator.h"
 #include "ns3/test.h"
 #include "ns3/wifi-mac-queue.h"
+#include "ns3/simulator.h"
 
 using namespace ns3;
 
@@ -32,92 +32,79 @@ using namespace ns3;
  *
  * This test verifies the correctness of DROP_OLDEST policy when packets
  * are pushed into the front of the queue. This case is not handled
- * by the underlying ns3::Queue<WifiMpdu>.
+ * by the underlying ns3::Queue<WifiMacQueueItem>.
  */
 class WifiMacQueueDropOldestTest : public TestCase
 {
-  public:
-    /**
-     * \brief Constructor
-     */
-    WifiMacQueueDropOldestTest();
+public:
+  /**
+   * \brief Constructor
+   */
+  WifiMacQueueDropOldestTest ();
 
-    void DoRun() override;
+  void DoRun () override;
 };
 
 WifiMacQueueDropOldestTest::WifiMacQueueDropOldestTest()
-    : TestCase("Test DROP_OLDEST setting")
+  : TestCase ("Test DROP_OLDEST setting")
 {
 }
 
 void
-WifiMacQueueDropOldestTest::DoRun()
+WifiMacQueueDropOldestTest::DoRun ()
 {
-    auto wifiMacQueue = CreateObject<WifiMacQueue>(AC_BE);
-    wifiMacQueue->SetMaxSize(QueueSize("5p"));
-    auto wifiMacScheduler = CreateObject<FcfsWifiQueueScheduler>();
-    wifiMacScheduler->SetAttribute("DropPolicy", EnumValue(FcfsWifiQueueScheduler::DROP_OLDEST));
-    wifiMacScheduler->m_perAcInfo[AC_BE].wifiMacQueue = wifiMacQueue;
-    wifiMacQueue->SetScheduler(wifiMacScheduler);
+  auto wifiMacQueue = CreateObject<WifiMacQueue> (AC_BE);
+  wifiMacQueue->SetMaxSize (QueueSize ("5p"));
+  wifiMacQueue->SetAttribute ("DropPolicy", EnumValue (WifiMacQueue::DROP_OLDEST));
 
-    Mac48Address addr1 = Mac48Address::Allocate();
-
-    // Initialize the queue with 5 packets.
-    std::list<uint64_t> packetUids;
-    for (uint32_t i = 0; i < 5; i++)
+  // Initialize the queue with 5 packets.
+  std::vector<uint64_t> packetUids;
+  for (uint32_t i = 0; i < 5; i++)
     {
-        WifiMacHeader header;
-        header.SetType(WIFI_MAC_QOSDATA);
-        header.SetAddr1(addr1);
-        header.SetQosTid(0);
-        auto packet = Create<Packet>();
-        auto item = Create<WifiMpdu>(packet, header);
-        wifiMacQueue->Enqueue(item);
+      WifiMacHeader header;
+      header.SetType (WIFI_MAC_QOSDATA);
+      header.SetQosTid (0);
+      auto packet = Create<Packet> ();
+      auto item = Create<WifiMacQueueItem> (packet, header);
+      wifiMacQueue->PushFront (item);
 
-        packetUids.push_back(packet->GetUid());
+      packetUids.push_back (packet->GetUid ());
     }
 
-    // Check that all elements are inserted successfully.
-    auto mpdu = wifiMacQueue->PeekByTidAndAddress(0, addr1);
-    NS_TEST_EXPECT_MSG_EQ(wifiMacQueue->GetNPackets(),
-                          5,
-                          "Queue has unexpected number of elements");
-    for (auto packetUid : packetUids)
+  // Check that all elements are inserted successfully.
+  auto it = wifiMacQueue->begin ();
+  NS_TEST_EXPECT_MSG_EQ (wifiMacQueue->GetNPackets (), 5, "Queue has unexpected number of elements");
+  for (uint32_t i = 5; i > 0; i--)
     {
-        NS_TEST_EXPECT_MSG_EQ(mpdu->GetPacket()->GetUid(),
-                              packetUid,
-                              "Stored packet is not the expected one");
-        mpdu = wifiMacQueue->PeekByTidAndAddress(0, addr1, mpdu);
+      NS_TEST_EXPECT_MSG_EQ ((*it)->GetPacket ()->GetUid (),
+                             packetUids.at (i - 1),
+                             "Stored packet is not the expected one");
+      it++;
     }
 
-    // Push another element into the queue.
-    WifiMacHeader header;
-    header.SetType(WIFI_MAC_QOSDATA);
-    header.SetAddr1(addr1);
-    header.SetQosTid(0);
-    auto packet = Create<Packet>();
-    auto item = Create<WifiMpdu>(packet, header);
-    wifiMacQueue->Enqueue(item);
+  // Push another element in front of the queue.
+  WifiMacHeader header;
+  header.SetType (WIFI_MAC_QOSDATA);
+  header.SetQosTid (0);
+  auto packet = Create<Packet> ();
+  auto item = Create<WifiMacQueueItem> (packet, header);
+  wifiMacQueue->PushFront (item);
 
-    // Update the list of expected packet UIDs.
-    packetUids.pop_front();
-    packetUids.push_back(packet->GetUid());
+  // Update the vector of expected packet UIDs.
+  packetUids.at (4) = packet->GetUid ();
 
-    // Check that front packet was replaced correctly.
-    mpdu = wifiMacQueue->PeekByTidAndAddress(0, addr1);
-    NS_TEST_EXPECT_MSG_EQ(wifiMacQueue->GetNPackets(),
-                          5,
-                          "Queue has unexpected number of elements");
-    for (auto packetUid : packetUids)
+  // Check that front packet was replaced correctly.
+  it = wifiMacQueue->begin ();
+  NS_TEST_EXPECT_MSG_EQ (wifiMacQueue->GetNPackets (), 5, "Queue has unexpected number of elements");
+  for (uint32_t i = 5; i > 0; i--)
     {
-        NS_TEST_EXPECT_MSG_EQ(mpdu->GetPacket()->GetUid(),
-                              packetUid,
-                              "Stored packet is not the expected one");
-        mpdu = wifiMacQueue->PeekByTidAndAddress(0, addr1, mpdu);
+      NS_TEST_EXPECT_MSG_EQ ((*it)->GetPacket ()->GetUid (),
+                             packetUids.at (i - 1),
+                             "Stored packet is not the expected one");
+      it++;
     }
 
-    wifiMacScheduler->Dispose();
-    Simulator::Destroy();
+  Simulator::Destroy ();
 }
 
 /**
@@ -129,13 +116,13 @@ WifiMacQueueDropOldestTest::DoRun()
 class WifiMacQueueTestSuite : public TestSuite
 {
   public:
-    WifiMacQueueTestSuite();
+    WifiMacQueueTestSuite ();
 };
 
-WifiMacQueueTestSuite::WifiMacQueueTestSuite()
-    : TestSuite("wifi-mac-queue", UNIT)
+WifiMacQueueTestSuite::WifiMacQueueTestSuite ()
+  : TestSuite ("wifi-mac-queue", UNIT)
 {
-    AddTestCase(new WifiMacQueueDropOldestTest, TestCase::QUICK);
+  AddTestCase (new WifiMacQueueDropOldestTest, TestCase::QUICK);
 }
 
 static WifiMacQueueTestSuite g_wifiMacQueueTestSuite; ///< the test suite

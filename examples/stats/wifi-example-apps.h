@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -24,105 +25,100 @@
  *
  */
 
-#include "ns3/application.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
+#include "ns3/application.h"
+
 #include "ns3/stats-module.h"
 
 using namespace ns3;
 
-// ==============================================
-// SENDER
-// ==============================================
+//----------------------------------------------------------------------
+//------------------------------------------------------
+class Sender : public Application {
+public:
+  static TypeId GetTypeId (void);
+  Sender();
+  virtual ~Sender();
 
-/**
- * Sender application.
- */
-class Sender : public Application
-{
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return The object TypeId.
-     */
-    static TypeId GetTypeId();
+protected:
+  virtual void DoDispose (void);
 
-    Sender();
-    ~Sender() override;
+private:
+  virtual void StartApplication (void);
+  virtual void StopApplication (void);
 
-  protected:
-    void DoDispose() override;
+  void SendPacket ();
 
-  private:
-    void StartApplication() override;
-    void StopApplication() override;
+  uint32_t        m_pktSize;
+  Ipv4Address     m_destAddr;
+  uint32_t        m_destPort;
+  Ptr<ConstantRandomVariable> m_interval;
+  uint32_t        m_numPkts;
 
-    /**
-     * Send a packet.
-     */
-    void SendPacket();
+  Ptr<Socket>     m_socket;
+  EventId         m_sendEvent;
 
-    Ipv4Address m_destAddr;                 //!< Destination address
-    uint32_t m_destPort{0};                 //!< Destination port
-    uint32_t m_packetSize{0};               //!< The packet size
-    Ptr<ConstantRandomVariable> m_interval; //!< Rng for sending packets
-    uint32_t m_nPackets{0};                 //!< Number of packets to send
-    uint32_t m_count{0};                    //!< Number of packets sent
+  TracedCallback<Ptr<const Packet> > m_txTrace;
 
-    Ptr<Socket> m_socket; //!< Sending socket
-    EventId m_sendEvent;  //!< Send packet event
+  uint32_t        m_count;
 
-    /// Tx TracedCallback
-    TracedCallback<Ptr<const Packet>> m_txTrace;
+  // end class Sender
 };
 
-// ==============================================
-// RECEIVER
-// ==============================================
 
-/**
- * Receiver application.
- */
-class Receiver : public Application
-{
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return The object TypeId.
-     */
-    static TypeId GetTypeId();
 
-    Receiver();
-    ~Receiver() override;
 
-    /**
-     * Set the counter calculator for received packets.
-     * \param calc The CounterCalculator.
-     */
-    void SetCounter(Ptr<CounterCalculator<>> calc);
+//------------------------------------------------------
+class Receiver : public Application {
+public:
+  static TypeId GetTypeId (void);
+  Receiver();
+  virtual ~Receiver();
 
-    /**
-     * Set the delay tracker for received packets.
-     * \param delay The Delay calculator.
-     */
-    void SetDelayTracker(Ptr<TimeMinMaxAvgTotalCalculator> delay);
+  void SetCounter (Ptr<CounterCalculator<> > calc);
+  void SetDelayTracker (Ptr<TimeMinMaxAvgTotalCalculator> delay);
 
-  protected:
-    void DoDispose() override;
+protected:
+  virtual void DoDispose (void);
 
-  private:
-    void StartApplication() override;
-    void StopApplication() override;
+private:
+  virtual void StartApplication (void);
+  virtual void StopApplication (void);
 
-    /**
-     * Receive a packet.
-     * \param socket The receiving socket.
-     */
-    void Receive(Ptr<Socket> socket);
+  void Receive (Ptr<Socket> socket);
 
-    Ptr<Socket> m_socket; //!< Receiving socket
-    uint32_t m_port{0};   //!< Listening port
+  Ptr<Socket>     m_socket;
 
-    Ptr<CounterCalculator<>> m_calc;           //!< Counter of the number of received packets
-    Ptr<TimeMinMaxAvgTotalCalculator> m_delay; //!< Delay calculator
+  uint32_t        m_port;
+
+  Ptr<CounterCalculator<> > m_calc;
+  Ptr<TimeMinMaxAvgTotalCalculator> m_delay;
+
+  // end class Receiver
+};
+
+
+
+
+//------------------------------------------------------
+class TimestampTag : public Tag {
+public:
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
+
+  virtual uint32_t GetSerializedSize (void) const;
+  virtual void Serialize (TagBuffer i) const;
+  virtual void Deserialize (TagBuffer i);
+
+  // these are our accessors to our tag structure
+  void SetTimestamp (Time time);
+  Time GetTimestamp (void) const;
+
+  void Print (std::ostream &os) const;
+
+private:
+  Time m_timestamp;
+
+  // end class TimestampTag
 };

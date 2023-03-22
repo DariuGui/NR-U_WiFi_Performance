@@ -1,6 +1,7 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright 2007 University of Washington
- *
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation;
@@ -17,18 +18,15 @@
  * Author: Tom Henderson (tomhend@u.washington.edu)
  */
 
-#include "global-route-manager.h"
-
-#include "global-route-manager-impl.h"
-
 #include "ns3/assert.h"
 #include "ns3/log.h"
 #include "ns3/simulation-singleton.h"
+#include "global-route-manager.h"
+#include "global-route-manager-impl.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE("GlobalRouteManager");
+NS_LOG_COMPONENT_DEFINE ("GlobalRouteManager");
 
 // ---------------------------------------------------------------------------
 //
@@ -37,32 +35,36 @@ NS_LOG_COMPONENT_DEFINE("GlobalRouteManager");
 // ---------------------------------------------------------------------------
 
 void
-GlobalRouteManager::DeleteGlobalRoutes()
+GlobalRouteManager::DeleteGlobalRoutes ()
 {
-    NS_LOG_FUNCTION_NOARGS();
-    SimulationSingleton<GlobalRouteManagerImpl>::Get()->DeleteGlobalRoutes();
+  NS_LOG_FUNCTION_NOARGS ();
+  SimulationSingleton<GlobalRouteManagerImpl>::Get ()->
+  DeleteGlobalRoutes ();
 }
 
 void
-GlobalRouteManager::BuildGlobalRoutingDatabase()
+GlobalRouteManager::BuildGlobalRoutingDatabase (void) 
 {
-    NS_LOG_FUNCTION_NOARGS();
-    SimulationSingleton<GlobalRouteManagerImpl>::Get()->BuildGlobalRoutingDatabase();
+  NS_LOG_FUNCTION_NOARGS ();
+  SimulationSingleton<GlobalRouteManagerImpl>::Get ()->
+  BuildGlobalRoutingDatabase ();
 }
 
 void
-GlobalRouteManager::InitializeRoutes()
+GlobalRouteManager::InitializeRoutes (void)
 {
-    NS_LOG_FUNCTION_NOARGS();
-    SimulationSingleton<GlobalRouteManagerImpl>::Get()->InitializeRoutes();
+  NS_LOG_FUNCTION_NOARGS ();
+  SimulationSingleton<GlobalRouteManagerImpl>::Get ()->
+  InitializeRoutes ();
 }
 
 uint32_t
-GlobalRouteManager::AllocateRouterId()
+GlobalRouteManager::AllocateRouterId (void)
 {
-    NS_LOG_FUNCTION_NOARGS();
-    static uint32_t routerId = 0;
-    return routerId++;
+  NS_LOG_FUNCTION_NOARGS ();
+  static uint32_t routerId = 0;
+  return routerId++;
 }
+
 
 } // namespace ns3

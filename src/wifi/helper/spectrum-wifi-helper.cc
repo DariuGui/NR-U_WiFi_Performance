@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2008 INRIA
  *
@@ -18,99 +19,60 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "spectrum-wifi-helper.h"
-
+#include "ns3/log.h"
+#include "ns3/names.h"
+#include "ns3/spectrum-wifi-phy.h"
 #include "ns3/error-rate-model.h"
 #include "ns3/frame-capture-model.h"
-#include "ns3/interference-helper.h"
-#include "ns3/log.h"
-#include "ns3/mobility-model.h"
-#include "ns3/names.h"
 #include "ns3/preamble-detection-model.h"
-#include "ns3/spectrum-wifi-phy.h"
-#include "ns3/wifi-net-device.h"
+#include "ns3/mobility-model.h"
+#include "spectrum-wifi-helper.h"
 
-namespace ns3
+namespace ns3 {
+
+NS_LOG_COMPONENT_DEFINE ("SpectrumWifiHelper");
+
+SpectrumWifiPhyHelper::SpectrumWifiPhyHelper ()
+  : m_channel (0)
 {
-
-NS_LOG_COMPONENT_DEFINE("SpectrumWifiHelper");
-
-SpectrumWifiPhyHelper::SpectrumWifiPhyHelper(uint8_t nLinks)
-    : WifiPhyHelper(nLinks)
-{
-    NS_ABORT_IF(m_phy.size() != nLinks);
-    for (auto& phy : m_phy)
-    {
-        phy.SetTypeId("ns3::SpectrumWifiPhy");
-    }
-    m_channels.resize(m_phy.size());
-    SetInterferenceHelper("ns3::InterferenceHelper");
-    SetErrorRateModel("ns3::TableBasedErrorRateModel");
+  m_phy.SetTypeId ("ns3::SpectrumWifiPhy");
+  SetErrorRateModel ("ns3::TableBasedErrorRateModel");
 }
 
 void
-SpectrumWifiPhyHelper::SetChannel(Ptr<SpectrumChannel> channel)
+SpectrumWifiPhyHelper::SetChannel (Ptr<SpectrumChannel> channel)
 {
-    for (auto& ch : m_channels)
-    {
-        ch = channel;
-    }
+  m_channel = channel;
 }
 
 void
-SpectrumWifiPhyHelper::SetChannel(std::string channelName)
+SpectrumWifiPhyHelper::SetChannel (std::string channelName)
 {
-    Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel>(channelName);
-    for (auto& ch : m_channels)
+  Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
+  m_channel = channel;
+}
+
+Ptr<WifiPhy>
+SpectrumWifiPhyHelper::Create (Ptr<Node> node, Ptr<NetDevice> device) const
+{
+  Ptr<SpectrumWifiPhy> phy = m_phy.Create<SpectrumWifiPhy> ();
+  phy->CreateWifiSpectrumPhyInterface (device);
+  Ptr<ErrorRateModel> error = m_errorRateModel.Create<ErrorRateModel> ();
+  phy->SetErrorRateModel (error);
+  if (m_frameCaptureModel.IsTypeIdSet ())
     {
-        ch = channel;
+      auto frameCapture = m_frameCaptureModel.Create<FrameCaptureModel> ();
+      phy->SetFrameCaptureModel (frameCapture);
     }
-}
-
-void
-SpectrumWifiPhyHelper::SetChannel(uint8_t linkId, Ptr<SpectrumChannel> channel)
-{
-    m_channels.at(linkId) = channel;
-}
-
-void
-SpectrumWifiPhyHelper::SetChannel(uint8_t linkId, std::string channelName)
-{
-    Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel>(channelName);
-    m_channels.at(linkId) = channel;
-}
-
-std::vector<Ptr<WifiPhy>>
-SpectrumWifiPhyHelper::Create(Ptr<Node> node, Ptr<WifiNetDevice> device) const
-{
-    std::vector<Ptr<WifiPhy>> ret;
-
-    for (std::size_t i = 0; i < m_phy.size(); i++)
+  if (m_preambleDetectionModel.IsTypeIdSet ())
     {
-        Ptr<SpectrumWifiPhy> phy = m_phy.at(i).Create<SpectrumWifiPhy>();
-        phy->CreateWifiSpectrumPhyInterface(device);
-        auto interference = m_interferenceHelper.Create<InterferenceHelper>();
-        phy->SetInterferenceHelper(interference);
-        Ptr<ErrorRateModel> error = m_errorRateModel.at(i).Create<ErrorRateModel>();
-        phy->SetErrorRateModel(error);
-        if (m_frameCaptureModel.at(i).IsTypeIdSet())
-        {
-            auto frameCapture = m_frameCaptureModel.at(i).Create<FrameCaptureModel>();
-            phy->SetFrameCaptureModel(frameCapture);
-        }
-        if (m_preambleDetectionModel.at(i).IsTypeIdSet())
-        {
-            auto preambleDetection =
-                m_preambleDetectionModel.at(i).Create<PreambleDetectionModel>();
-            phy->SetPreambleDetectionModel(preambleDetection);
-        }
-        phy->SetChannel(m_channels.at(i));
-        phy->SetDevice(device);
-        phy->SetMobility(node->GetObject<MobilityModel>());
-        ret.emplace_back(phy);
+      auto preambleDetection = m_preambleDetectionModel.Create<PreambleDetectionModel> ();
+      phy->SetPreambleDetectionModel (preambleDetection);
     }
-
-    return ret;
+  phy->SetChannel (m_channel);
+  phy->SetDevice (device);
+  phy->SetMobility (node->GetObject<MobilityModel> ());
+  return phy;
 }
 
-} // namespace ns3
+} //namespace ns3

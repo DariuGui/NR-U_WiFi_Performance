@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2016 Sébastien Deronne
  *
@@ -22,8 +23,7 @@
 
 #include "ns3/wifi-information-element.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \brief The DSSS Parameter Set
@@ -33,27 +33,42 @@ namespace ns3
  */
 class DsssParameterSet : public WifiInformationElement
 {
-  public:
-    DsssParameterSet();
+public:
+  DsssParameterSet ();
 
-    // Implementations of pure virtual methods of WifiInformationElement
-    WifiInformationElementId ElementId() const override;
+  // Implementations of pure virtual methods of WifiInformationElement
+  WifiInformationElementId ElementId () const override;
+  uint8_t GetInformationFieldSize () const override;
+  void SerializeInformationField (Buffer::Iterator start) const override;
+  uint8_t DeserializeInformationField (Buffer::Iterator start, uint8_t length) override;
+  /* This information element is a bit special in that it is only
+     included if the STA does support DSSS. To support this we
+     override the Serialize and GetSerializedSize methods of
+     WifiInformationElement. */
+  Buffer::Iterator Serialize (Buffer::Iterator start) const override;
+  uint16_t GetSerializedSize () const override;
 
-    /**
-     * Set the Current Channel field in the DsssParameterSet information element.
-     *
-     * \param currentChannel the CurrentChannel field in the DsssParameterSet information element
-     */
-    void SetCurrentChannel(uint8_t currentChannel);
+  /**
+   * Set DSSS supported
+   * \param dsssSupported the DSSS supported indicator
+   */
+  void SetDsssSupported (uint8_t dsssSupported);
 
-  private:
-    uint16_t GetInformationFieldSize() const override;
-    void SerializeInformationField(Buffer::Iterator start) const override;
-    uint16_t DeserializeInformationField(Buffer::Iterator start, uint16_t length) override;
+  /**
+   * Set the Current Channel field in the DsssParameterSet information element.
+   *
+   * \param currentChannel the CurrentChannel field in the DsssParameterSet information element
+   */
+  void SetCurrentChannel (uint8_t currentChannel);
 
-    uint8_t m_currentChannel; ///< current channel number
+
+private:
+  uint8_t m_currentChannel; ///< current channel number
+
+  /// This is used to decide whether this element should be added to the frame or not
+  bool m_dsssSupported;
 };
 
-} // namespace ns3
+} //namespace ns3
 
 #endif /* DSSS_PARAMETER_SET_H */

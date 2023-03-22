@@ -1,12 +1,8 @@
-# The Network Simulator, Version 3
 
+The Network Simulator, Version 3
+================================
 
-[![codecov](https://codecov.io/gh/nsnam/ns-3-dev-git/branch/master/graph/badge.svg)](https://codecov.io/gh/nsnam/ns-3-dev-git/branch/master/)
-[![Gitlab CI](https://gitlab.com/nsnam/ns-3-dev/badges/master/pipeline.svg)](https://gitlab.com/nsnam/ns-3-dev/-/pipelines)
-[![Github CI](https://github.com/nsnam/ns-3-dev-git/actions/workflows/per_commit.yml/badge.svg)](https://github.com/nsnam/ns-3-dev-git/actions)
-
-
-## Table of Contents
+## Table of Contents:
 
 1) [An overview](#an-open-source-project)
 2) [Building ns-3](#building-ns-3)
@@ -14,8 +10,8 @@
 4) [Getting access to the ns-3 documentation](#getting-access-to-the-ns-3-documentation)
 5) [Working with the development version of ns-3](#working-with-the-development-version-of-ns-3)
 
-> **NOTE**: Much more substantial information about ns-3 can be found at
-<https://www.nsnam.org>
+Note:  Much more substantial information about ns-3 can be found at
+https://www.nsnam.org
 
 ## An Open Source project
 
@@ -30,11 +26,11 @@ The process of contributing to the ns-3 project varies with
 the people involved, the amount of time they can invest
 and the type of model they want to work on, but the current
 process that the project tries to follow is described here:
-<https://www.nsnam.org/developers/contributing-code/>
+https://www.nsnam.org/developers/contributing-code/
 
 This README excerpts some details from a more extensive
 tutorial that is maintained at:
-<https://www.nsnam.org/documentation/latest/>
+https://www.nsnam.org/documentation/latest/
 
 ## Building ns-3
 
@@ -45,27 +41,26 @@ use of these ns-3 libraries.
 
 To build the set of default libraries and the example
 programs included in this package, you need to use the
-tool 'ns3'. Detailed information on how to use ns3 is
+tool 'waf'. Detailed information on how to use waf is
 included in the file doc/build.txt
 
 However, the real quick and dirty way to get started is to
 type the command
-
 ```shell
-./ns3 configure --enable-examples
+./waf configure --enable-examples
 ```
 
 followed by
 
 ```shell
-./ns3
+./waf
 ```
 
 in the directory which contains this README file. The files
 built will be copied in the build/ directory.
 
 The current codebase is expected to build and run on the
-set of platforms listed in the [release notes](RELEASE_NOTES.md)
+set of platforms listed in the [release notes](RELEASE_NOTES)
 file.
 
 Other platforms may or may not work: we welcome patches to
@@ -78,7 +73,7 @@ enabled), it should be easy to run the sample programs with the
 following command, such as:
 
 ```shell
-./ns3 run simple-global-routing
+./waf --run simple-global-routing
 ```
 
 That program should generate a `simple-global-routing.tr` text
@@ -94,18 +89,22 @@ quite likely that you will want to get started on reading
 some ns-3 documentation.
 
 All of that documentation should always be available from
-the ns-3 website: <https://www.nsnam.org/documentation/>.
+the ns-3 website: https://www.nsnam.org/documentation/.
 
 This documentation includes:
 
-- a tutorial
-- a reference manual
-- models in the ns-3 model library
-- a wiki for user-contributed tips: <https://www.nsnam.org/wiki/>
-- API documentation generated using doxygen: this is
-  a reference manual, most likely not very well suited
-  as introductory text:
-  <https://www.nsnam.org/doxygen/index.html>
+  - a tutorial
+
+  - a reference manual
+
+  - models in the ns-3 model library
+
+  - a wiki for user-contributed tips: https://www.nsnam.org/wiki/
+
+  - API documentation generated using doxygen: this is
+    a reference manual, most likely not very well suited
+    as introductory text:
+    https://www.nsnam.org/doxygen/index.html
 
 ## Working with the development version of ns-3
 
@@ -117,7 +116,6 @@ familiar with it.
 
 If you have successfully installed git, you can get
 a copy of the development version with the following command:
-
 ```shell
 git clone https://gitlab.com/nsnam/ns-3-dev.git
 ```

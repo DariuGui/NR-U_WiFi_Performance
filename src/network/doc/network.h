@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -20,8 +21,7 @@
 /**
  * \defgroup network Network
  *
- * This section documents the API of the ns-3 network module. For a generic functional description,
- * please refer to the ns-3 manual.
+ * This section documents the API of the ns-3 network module. For a generic functional description, please refer to the ns-3 manual.
  */
 
 #endif /* NETWORK_H */

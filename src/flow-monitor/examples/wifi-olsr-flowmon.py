@@ -1,51 +1,62 @@
 # -*-  Mode: Python; -*-
 #  Copyright (c) 2009 INESC Porto
-#
+# 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License version 2 as
 #  published by the Free Software Foundation;
-#
+# 
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#
+# 
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
+# 
 #  Authors: Gustavo Carneiro <gjc@inescporto.pt>
 
 from __future__ import print_function
 import sys
 
-from ns import ns
+import ns.applications
+import ns.core
+import ns.flow_monitor
+import ns.internet
+import ns.mobility
+import ns.network
+import ns.olsr
+import ns.wifi
+try:
+    import ns.visualizer
+except ImportError:
+    pass
 
 DISTANCE = 20 # (m)
 NUM_NODES_SIDE = 3
 
-
 def main(argv):
 
-    from ctypes import c_int, c_bool, c_char_p, create_string_buffer
-    NumNodesSide = c_int(2)
-    Plot = c_bool(False)
-    BUFFLEN = 4096
-    ResultsBuffer = create_string_buffer(b"output.xml", BUFFLEN)
-    Results = c_char_p(ResultsBuffer.raw)
+    cmd = ns.core.CommandLine()
 
-    cmd = ns.CommandLine(__file__)
-    cmd.AddValue("NumNodesSide", "Grid side number of nodes (total number of nodes will be this number squared)", NumNodesSide)
-    cmd.AddValue("Results", "Write XML results to file", Results, BUFFLEN)
-    cmd.AddValue("Plot", "Plot the results using the matplotlib python module", Plot)
+    cmd.NumNodesSide = None
+    cmd.AddValue("NumNodesSide", "Grid side number of nodes (total number of nodes will be this number squared)")
+
+    cmd.Results = None
+    cmd.AddValue("Results", "Write XML results to file")
+
+    cmd.Plot = None
+    cmd.AddValue("Plot", "Plot the results using the matplotlib python module")
+
     cmd.Parse(argv)
 
-    wifi = ns.CreateObject("WifiHelper")
-    wifiMac = ns.CreateObject("WifiMacHelper")
-    wifiPhy = ns.CreateObject("YansWifiPhyHelper")
+    wifi = ns.wifi.WifiHelper()
+    wifiMac = ns.wifi.WifiMacHelper()
+    wifiPhy = ns.wifi.YansWifiPhyHelper()
     wifiChannel = ns.wifi.YansWifiChannelHelper.Default()
     wifiPhy.SetChannel(wifiChannel.Create())
     ssid = ns.wifi.Ssid("wifi-default")
+    wifi.SetRemoteStationManager("ns3::ArfWifiManager")
     wifiMac.SetType ("ns3::AdhocWifiMac",
                      "Ssid", ns.wifi.SsidValue(ssid))
 
@@ -61,8 +72,8 @@ def main(argv):
     ipv4Addresses.SetBase(ns.network.Ipv4Address("10.0.0.0"), ns.network.Ipv4Mask("255.255.255.0"))
 
     port = 9   # Discard port(RFC 863)
-    inetAddress = ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)
-    onOffHelper = ns.applications.OnOffHelper("ns3::UdpSocketFactory", inetAddress.ConvertTo())
+    onOffHelper = ns.applications.OnOffHelper("ns3::UdpSocketFactory",
+                                  ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
     onOffHelper.SetAttribute("DataRate", ns.network.DataRateValue(ns.network.DataRate("100kbps")))
     onOffHelper.SetAttribute("OnTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
     onOffHelper.SetAttribute("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
@@ -70,38 +81,34 @@ def main(argv):
     addresses = []
     nodes = []
 
-    if NumNodesSide.value == 2:
+    if cmd.NumNodesSide is None:
         num_nodes_side = NUM_NODES_SIDE
     else:
-        num_nodes_side = NumNodesSide.value
+        num_nodes_side = int(cmd.NumNodesSide)
 
-    nodes = ns.NodeContainer(num_nodes_side*num_nodes_side)
-    accumulator = 0
     for xi in range(num_nodes_side):
         for yi in range(num_nodes_side):
 
-            node = nodes.Get(accumulator)
-            accumulator += 1
-            container = ns.network.NodeContainer(node)
-            internet.Install(container)
+            node = ns.network.Node()
+            nodes.append(node)
 
-            mobility = ns.CreateObject("ConstantPositionMobilityModel")
+            internet.Install(ns.network.NodeContainer(node))
+
+            mobility = ns.mobility.ConstantPositionMobilityModel()
             mobility.SetPosition(ns.core.Vector(xi*DISTANCE, yi*DISTANCE, 0))
             node.AggregateObject(mobility)
-
-            device = wifi.Install(wifiPhy, wifiMac, node)
-            ipv4_interfaces = ipv4Addresses.Assign(device)
+            
+            devices = wifi.Install(wifiPhy, wifiMac, node)
+            ipv4_interfaces = ipv4Addresses.Assign(devices)
             addresses.append(ipv4_interfaces.GetAddress(0))
 
-    for i, node in [(i, nodes.Get(i)) for i in range(nodes.GetN())]:
+    for i, node in enumerate(nodes):
         destaddr = addresses[(len(addresses) - 1 - i) % len(addresses)]
         #print (i, destaddr)
-        onOffHelper.SetAttribute("Remote", ns.network.AddressValue(ns.network.InetSocketAddress(destaddr, port).ConvertTo()))
-        container = ns.network.NodeContainer(node)
-        app = onOffHelper.Install(container)
-        urv = ns.CreateObject("UniformRandomVariable")#ns.cppyy.gbl.get_rng()
-        startDelay = ns.Seconds(urv.GetValue(20, 30))
-        app.Start(startDelay)
+        onOffHelper.SetAttribute("Remote", ns.network.AddressValue(ns.network.InetSocketAddress(destaddr, port)))
+        app = onOffHelper.Install(ns.network.NodeContainer(node))
+        urv = ns.core.UniformRandomVariable()
+        app.Start(ns.core.Seconds(urv.GetValue(20, 30)))
 
     #internet.EnablePcapAll("wifi-olsr")
     flowmon_helper = ns.flow_monitor.FlowMonitorHelper()
@@ -148,7 +155,7 @@ def main(argv):
     monitor.CheckForLostPackets()
     classifier = flowmon_helper.GetClassifier()
 
-    if Results.value != b"output.xml":
+    if cmd.Results is None:
         for flow_id, flow_stats in monitor.GetFlowStats():
             t = classifier.FindFlow(flow_id)
             proto = {6: 'TCP', 17: 'UDP'} [t.protocol]
@@ -156,11 +163,10 @@ def main(argv):
                 (flow_id, proto, t.sourceAddress, t.sourcePort, t.destinationAddress, t.destinationPort))
             print_stats(sys.stdout, flow_stats)
     else:
-        res = monitor.SerializeToXmlFile(Results.value.decode("utf-8"), True, True)
-        print (res)
+        print (monitor.SerializeToXmlFile(cmd.Results, True, True))
 
 
-    if Plot.value:
+    if cmd.Plot is not None:
         import pylab
         delays = []
         for flow_id, flow_stats in monitor.GetFlowStats():

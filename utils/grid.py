@@ -21,6 +21,7 @@ class DataRange:
         @param start start
         @param end end
         @param value value
+        @return none
         """
         self.start = start
         self.end = end
@@ -36,6 +37,7 @@ class EventString:
         @param self this object
         @param at you
         @param value value
+        @return none
         """
         self.at = at
         self.value = value
@@ -50,6 +52,7 @@ class EventFloat:
         @param self this object
         @param at you
         @param value value
+        @return none
         """
         self.at = at
         self.value = value
@@ -64,6 +67,7 @@ class EventInt:
         @param self this object
         @param at you
         @param value value
+        @return none
         """
         self.at = at
         self.value = value
@@ -93,6 +97,7 @@ class TimelineDataRange:
         """! Initializer
         @param self this object
         @param name name
+        @return none
         """
         self.name = name
         self.ranges = []
@@ -189,6 +194,7 @@ class TimelineEvent:
         """! Get ranges bounds
         @param self this object
         @param name name
+        @return none
         """
         self.name = name
         self.events = []
@@ -269,6 +275,7 @@ class Timeline:
         """! Initializer
         @param self this object
         @param name name
+        @return none
         """
         self.ranges = []
         self.event_str = []
@@ -440,6 +447,7 @@ class Color:
         @param r: red
         @param g: green
         @param b: blue
+        @return none
         """
         self.r = r
         self.g = g
@@ -467,6 +475,7 @@ class Colors:
     def __init__(self):
         """! Initializer
         @param self this object
+        @return none
         """
         self.__colors = {}
     def add(self, name, color):
@@ -502,6 +511,7 @@ class TopLegendRenderer:
     def __init__(self):
         """! Initializer
         @param self this object
+        @return none
         """
         self.__padding = 10
     def set_padding(self, padding):
@@ -617,6 +627,7 @@ class TimelinesRenderer:
     def __init__(self):
         """! Initializer
         @param self this object
+        @return none
         """
         self.padding = 10
         return
@@ -852,6 +863,7 @@ class ScaleRenderer:
     def __init__(self):
         """! Initializer
         @param self this object
+        @return none
         """
         self.__top = 0
         return
@@ -995,6 +1007,7 @@ class GraphicRenderer:
         @param self this object
         @param start start
         @param end end
+        @return none
         """
         self.__start = float(start)
         self.__end = float(end)
@@ -1288,6 +1301,7 @@ class GtkGraphicRenderer(gtk.DrawingArea):
         """! Initializer
         @param self this object
         @param data data
+        @return none
         """
         super(GtkGraphicRenderer, self).__init__()
         self.__data = data
@@ -1528,6 +1542,7 @@ class MainWindow:
     def __init__(self):
         """! Initializer
         @param self this object
+        @return none
         """
         return
     def run(self, graphic):

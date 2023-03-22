@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -24,40 +25,39 @@
 
 #include "mpi-receiver.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 TypeId
-MpiReceiver::GetTypeId()
+MpiReceiver::GetTypeId (void)
 {
-    static TypeId tid = TypeId("ns3::MpiReceiver")
-                            .SetParent<Object>()
-                            .SetGroupName("Mpi")
-                            .AddConstructor<MpiReceiver>();
-    return tid;
+  static TypeId tid = TypeId ("ns3::MpiReceiver")
+    .SetParent<Object> ()
+    .SetGroupName ("Mpi")
+    .AddConstructor <MpiReceiver> ();
+  return tid;
 }
 
-MpiReceiver::~MpiReceiver()
+MpiReceiver::~MpiReceiver ()
 {
-}
-
-void
-MpiReceiver::SetReceiveCallback(Callback<void, Ptr<Packet>> callback)
-{
-    m_rxCallback = callback;
 }
 
 void
-MpiReceiver::Receive(Ptr<Packet> p)
+MpiReceiver::SetReceiveCallback (Callback<void, Ptr<Packet> > callback)
 {
-    NS_ASSERT(!m_rxCallback.IsNull());
-    m_rxCallback(p);
+  m_rxCallback = callback;
 }
 
 void
-MpiReceiver::DoDispose()
+MpiReceiver::Receive (Ptr<Packet> p)
 {
-    m_rxCallback = MakeNullCallback<void, Ptr<Packet>>();
+  NS_ASSERT (!m_rxCallback.IsNull ());
+  m_rxCallback (p);
+}
+
+void
+MpiReceiver::DoDispose(void)
+{
+  m_rxCallback = MakeNullCallback<void, Ptr<Packet> >();
 }
 
 } // namespace ns3

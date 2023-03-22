@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 INESC Porto
  *
@@ -17,8 +18,8 @@
  * Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
  */
 
-#include "ns3/event-garbage-collector.h"
 #include "ns3/test.h"
+#include "ns3/event-garbage-collector.h"
 
 /**
  * \file
@@ -33,11 +34,10 @@
  * \defgroup event-garbage-tests EventGarbageCollector test suite
  */
 
-namespace ns3
-{
+namespace ns3 {
 
-namespace tests
-{
+namespace tests {
+
 
 /**
  * \ingroup event-garbage-tests
@@ -45,59 +45,55 @@ namespace tests
  */
 class EventGarbageCollectorTestCase : public TestCase
 {
-    int m_counter;                   //!< Counter to trigger deletion of events.
-    EventGarbageCollector* m_events; //!< Object under test.
+  int m_counter; //!< Counter to trigger deletion of events.
+  EventGarbageCollector *m_events; //!< Object under test.
 
-    /** Callback to record event invocations. */
-    void EventGarbageCollectorCallback();
+  /** Callback to record event invocations. */
+  void EventGarbageCollectorCallback ();
 
-  public:
-    /** Constructor. */
-    EventGarbageCollectorTestCase();
-    /** Destructor. */
-    ~EventGarbageCollectorTestCase() override;
-    void DoRun() override;
+public:
+
+  /** Constructor. */
+  EventGarbageCollectorTestCase ();
+  /** Destructor. */
+  virtual ~EventGarbageCollectorTestCase ();
+  virtual void DoRun (void);
 };
 
-EventGarbageCollectorTestCase::EventGarbageCollectorTestCase()
-    : TestCase("EventGarbageCollector"),
-      m_counter(0),
-      m_events(nullptr)
-{
-}
+EventGarbageCollectorTestCase::EventGarbageCollectorTestCase ()
+  : TestCase ("EventGarbageCollector"), m_counter (0), m_events (0)
+{}
 
-EventGarbageCollectorTestCase::~EventGarbageCollectorTestCase()
-{
-}
+EventGarbageCollectorTestCase::~EventGarbageCollectorTestCase ()
+{}
 
 void
-EventGarbageCollectorTestCase::EventGarbageCollectorCallback()
+EventGarbageCollectorTestCase::EventGarbageCollectorCallback ()
 {
-    m_counter++;
-    if (m_counter == 50)
+  m_counter++;
+  if (m_counter == 50)
     {
-        // this should cause the remaining (50) events to be cancelled
-        delete m_events;
-        m_events = nullptr;
+      // this should cause the remaining (50) events to be cancelled
+      delete m_events;
+      m_events = 0;
     }
 }
 
-void
-EventGarbageCollectorTestCase::DoRun()
+void EventGarbageCollectorTestCase::DoRun (void)
 {
-    m_events = new EventGarbageCollector();
+  m_events = new EventGarbageCollector ();
 
-    for (int n = 0; n < 100; n++)
+  for (int n = 0; n < 100; n++)
     {
-        m_events->Track(
-            Simulator::Schedule(Simulator::Now(),
-                                &EventGarbageCollectorTestCase::EventGarbageCollectorCallback,
-                                this));
+      m_events->Track (Simulator::Schedule
+                         (Simulator::Now (),
+                         &EventGarbageCollectorTestCase::EventGarbageCollectorCallback,
+                         this));
     }
-    Simulator::Run();
-    NS_TEST_EXPECT_MSG_EQ(m_events, 0, "");
-    NS_TEST_EXPECT_MSG_EQ(m_counter, 50, "");
-    Simulator::Destroy();
+  Simulator::Run ();
+  NS_TEST_EXPECT_MSG_EQ (m_events, 0, "");
+  NS_TEST_EXPECT_MSG_EQ (m_counter, 50, "");
+  Simulator::Destroy ();
 }
 
 /**
@@ -106,12 +102,12 @@ EventGarbageCollectorTestCase::DoRun()
  */
 class EventGarbageCollectorTestSuite : public TestSuite
 {
-  public:
-    EventGarbageCollectorTestSuite()
-        : TestSuite("event-garbage-collector")
-    {
-        AddTestCase(new EventGarbageCollectorTestCase());
-    }
+public:
+  EventGarbageCollectorTestSuite ()
+    : TestSuite ("event-garbage-collector")
+  {
+    AddTestCase (new EventGarbageCollectorTestCase ());
+  }
 };
 
 /**
@@ -120,6 +116,8 @@ class EventGarbageCollectorTestSuite : public TestSuite
  */
 static EventGarbageCollectorTestSuite g_eventGarbageCollectorTestSuite;
 
-} // namespace tests
 
-} // namespace ns3
+}    // namespace tests
+
+}  // namespace ns3
+

@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2016 Universita' degli Studi di Napoli Federico II
  *               2016 University of Washington
@@ -26,8 +27,7 @@
 #include "ns3/object.h"
 #include "ns3/packet-filter.h"
 
-namespace ns3
-{
+namespace ns3 {
 
 /**
  * \ingroup ipv6
@@ -35,21 +35,20 @@ namespace ns3
  *
  * Ipv6PacketFilter is the abstract base class for filters defined for IPv6 packets.
  */
-class Ipv6PacketFilter : public PacketFilter
-{
-  public:
-    /**
-     * \brief Get the type ID.
-     * \return the object TypeId
-     */
-    static TypeId GetTypeId();
+class Ipv6PacketFilter: public PacketFilter {
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
 
-    Ipv6PacketFilter();
-    ~Ipv6PacketFilter() override;
+  Ipv6PacketFilter ();
+  virtual ~Ipv6PacketFilter ();
 
-  private:
-    bool CheckProtocol(Ptr<QueueDiscItem> item) const override;
-    int32_t DoClassify(Ptr<QueueDiscItem> item) const override = 0;
+private:
+  virtual bool CheckProtocol (Ptr<QueueDiscItem> item) const;
+  virtual int32_t DoClassify (Ptr<QueueDiscItem> item) const = 0;
 };
 
 } // namespace ns3

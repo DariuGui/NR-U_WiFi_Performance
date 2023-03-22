@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2007 INRIA
  *
@@ -17,20 +18,19 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "udp-socket-factory.h"
-
 #include "ns3/uinteger.h"
 
-namespace ns3
-{
+namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED(UdpSocketFactory);
+NS_OBJECT_ENSURE_REGISTERED (UdpSocketFactory);
 
-TypeId
-UdpSocketFactory::GetTypeId()
+TypeId UdpSocketFactory::GetTypeId (void)
 {
-    static TypeId tid =
-        TypeId("ns3::UdpSocketFactory").SetParent<SocketFactory>().SetGroupName("Internet");
-    return tid;
+  static TypeId tid = TypeId ("ns3::UdpSocketFactory")
+    .SetParent<SocketFactory> ()
+    .SetGroupName ("Internet")
+  ;
+  return tid;
 }
 
 } // namespace ns3

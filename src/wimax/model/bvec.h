@@ -1,3 +1,4 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  *  Copyright (c) 2007,2008, 2009 INRIA, UDcast
  *
@@ -23,10 +24,9 @@
 
 #include <vector>
 
-namespace ns3
-{
+namespace ns3 {
 /// boolean vector typedef
-typedef std::vector<bool> Bvec;
-} // namespace ns3
+typedef std::vector<bool> bvec;
+}
 
 #endif /* BVEC_H */
